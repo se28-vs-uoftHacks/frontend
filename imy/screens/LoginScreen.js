@@ -19,6 +19,8 @@ import { useAuth } from '../hooks/AuthContext';
 // import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 // import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 
+
+
 const LoginScreen = ( { navigation }) => {
   // let [fontsLoaded] = useFonts({
   //   PressStart2P_400Regular,
@@ -42,33 +44,41 @@ const LoginScreen = ( { navigation }) => {
         });
 
         if (response.status === 200) {
-          navigation.navigate('Dashboard');
+          navigation.navigate('TabNavigator', { screen: 'Dashboard' })
         }
 
-        console.log(response.data);
         signIn(response.data.user)
-        
+
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     loginUser(username, password);
 
     // navigation.navigate('Dashboard');
   };
 
   const handleForgotPassword = () => {
-    // a totally real forgot password button
+    if (forgotPasswordText === "Forgot Password?"){
+      setForgotPasswordText("sucks lmao don't forget next time");
+    } else {
+      setForgotPasswordText("Forgot Password?");
+    }
+
+  
   };
 
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.welcomeContainer}>
-          <Text style={styles.welcome}>Welcome</Text>
+          <Text style={styles.welcome}>Welcome!</Text>
         </View>
         <View style={styles.inputContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
+            <Text style={styles.signup}>No account yet? Make one here!</Text>
+          </TouchableOpacity>
           <TextInput
             style={styles.input}
             onChangeText={setUsername}
@@ -90,7 +100,7 @@ const LoginScreen = ( { navigation }) => {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.enterButton} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Enter</Text>
+            <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buffer}></View>
@@ -179,6 +189,12 @@ const styles = StyleSheet.create({
   buffer: {
     height: 40,
   },
+  signup: {
+    color: 'white',
+    marginBottom: 30,
+    textDecorationLine: 'underline',
+    fontFamily: 'Poppins_400Regular',
+  }
 });
 
 export default LoginScreen;

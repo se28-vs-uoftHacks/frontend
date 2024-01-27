@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import UploadScreen from './screens/UploadScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import AccountScreen from './screens/AccountScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -19,16 +21,14 @@ const Stack = createStackNavigator();
 const BottomTabNavigator = () => {
   return (
 
-    <AuthContextProvider>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen
-          name="Login"
-          component={LoginScreen}
+          name="Account"
+          component={AccountScreen}
           options={{
-            tabBarStyle: { display: 'none' },
             tabBarIcon: ({ focused, color, size }) => (
               <Ionicons
-                name={focused ? 'log-in' : 'log-in-outline'}
+                name={focused ? 'person' : 'person-circle-outline'}
                 size={size}
                 color={'#059905'}
 
@@ -63,7 +63,6 @@ const BottomTabNavigator = () => {
           }}
         />
       </Tab.Navigator>
-    </AuthContextProvider>
   );
 };
 
@@ -73,23 +72,32 @@ export default function App() {
     Prompt_400Regular,
     Poppins_400Regular,
   });
+  
+  if (!fontsLoaded) {
+    return;
+  } 
 
   return (
+    <AuthContextProvider>
     <NavigationContainer>
-      <Stack.Navigator
+      <Stack.Navigator initialRouteName="Login"
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
         }}
       >
-        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+
           <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
           />
+        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
+    
     </NavigationContainer>
+    </AuthContextProvider>
   );
 }
