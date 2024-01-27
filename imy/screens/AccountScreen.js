@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
-import axios from 'axios';
 import { useAuth } from '../hooks/AuthContext';
 
 // import {

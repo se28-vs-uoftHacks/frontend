@@ -10,7 +10,7 @@ import {
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import downPipe from '../assets/shorter_down_pipe.png';
 import upPipe from '../assets/short_up_pipe.png';
-import { Image } from 'react-native';
+import { Image, Animated } from 'react-native';
 import bird1 from '../birds/bird_1.png';
 import bird2 from '../birds/bird_2.png';
 import bird3 from '../birds/bird_3.png';
@@ -22,6 +22,26 @@ import bird8 from '../birds/bird_8.png';
 import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
+import { useEffect } from 'react';
+
+
+// make birds shake lmao
+const shakeAnimation = new Animated.Value(0);
+
+const startShake = () => {
+  Animated.sequence([
+    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
+    Animated.timing(shakeAnimation, { toValue: -10, duration: 100, useNativeDriver: true }),
+    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
+    Animated.timing(shakeAnimation, { toValue: 0, duration: 100, useNativeDriver: true })
+  ]).start(() => startShake()); // Restart the animation when it's finished
+}
+// Use the animated value in your styles
+const shakeStyle = {
+  transform: [{ translateX: shakeAnimation }]
+};
+
+
 
 const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   return (
@@ -41,11 +61,16 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   );
 };
 
+
 const DashboardScreen = () => {
   const birdImagesRow1 = [bird1, bird2, bird3];
   const birdImagesRow2 = [bird4, bird5, bird6];
   const birdImagesRow3 = [bird7, bird8, bird9];
 
+  useEffect(() => {
+    startShake();
+  }, []);
+  
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
@@ -54,11 +79,13 @@ const DashboardScreen = () => {
             <View style={styles.pipe1Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow
-              birdImages={birdImagesRow1}
-              showCrown={false}
-              showPoop={true}
-            />
+            <Animated.View style={shakeStyle}>
+              <BirdRow
+                birdImages={birdImagesRow1}
+                showCrown={false}
+                showPoop={true}
+              />
+            </Animated.View>
             <View style={styles.pipe2Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
@@ -67,11 +94,13 @@ const DashboardScreen = () => {
             <View style={styles.pipe3Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow
-              birdImages={birdImagesRow2}
-              showCrown={false}
-              showPoop={false}
-            />
+            <Animated.View style={shakeStyle}>
+              <BirdRow
+                birdImages={birdImagesRow2}
+                showCrown={false}
+                showPoop={false}
+              />
+            </Animated.View>
             <View style={styles.pipe4Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
@@ -80,11 +109,13 @@ const DashboardScreen = () => {
             <View style={styles.pipe5Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow
-              birdImages={birdImagesRow3}
-              showCrown={true}
-              showPoop={false}
-            />
+            <Animated.View style={shakeStyle}>
+              <BirdRow
+                birdImages={birdImagesRow3}
+                showCrown={true}
+                showPoop={false}
+              />
+            </Animated.View>
             <View style={styles.pipe6Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
