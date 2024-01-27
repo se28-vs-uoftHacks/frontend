@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import UploadScreen from './screens/LoginScreen';
+import Dashboard from './screens/DashboardScreen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -14,13 +15,12 @@ import DashboardScreen from './screens/DashboardScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen 
-        name="Login" 
-        component={LoginScreen} 
+      <Tab.Screen
+        name="Login"
+        component={LoginScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
@@ -31,9 +31,9 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen 
-        name="Dashboard" 
-        component={LoginScreen} 
+      <Tab.Screen
+        name="Dashboard"
+        component={LoginScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
@@ -44,9 +44,9 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen 
-        name="Upload" 
-        component={UploadScreen} 
+      <Tab.Screen
+        name="Upload"
+        component={UploadScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
@@ -60,7 +60,6 @@ const BottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -81,11 +80,7 @@ export default function App() {
         <Tab.Screen name="Login" component={LoginScreen} />
         <Tab.Screen name="Dashboard" component={DashboardScreen} />
         <Tab.Screen name="Upload" component={UploadScreen} />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
-
-  const BottomTabNavigator = () => {
-    <Tab.Navigator></Tab.Navigator>;
-  };
 }
