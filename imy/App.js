@@ -1,17 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/LoginScreen';
+import { NavigationContainer } from "@react-navigation/native"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import LoginScreen from "./screens/LoginScreen"
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator()
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
+        }}
+        // screenOptions={({ route }) => ({
+        //     tabBarActiveTintColor: 'tomato',
+        //     tabBarInactiveTintColor: 'gray',
+        //   })}
+      >
+        <Tab.Screen name="Login" component={LoginScreen} />
+        <Tab.Screen name="Home" component={LoginScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
-  );
+  )
 }
