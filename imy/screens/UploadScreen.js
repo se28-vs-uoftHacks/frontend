@@ -1,6 +1,9 @@
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from '../hooks/AuthContext';
+
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -21,33 +24,75 @@ const UploadScreen = () => {
     PressStart2P_400Regular,
   });
 
-  // right now, we don't have dynamic text/prompts but we will use something like this once we do
+  // right now, we don't have dynamic text/prompts, but we will use something like this once we do
   const [prompt, setPrompt] = useState('');
   const [prompt2, setPrompt2] = useState(''); // we'll likely have two prompts e.g., jan 2021 and pet photos
   const [selectImage, setSelectImage] = useState('');
+  const { user } = useAuth();
 
-  // pulls from the backend which generates the daily prompts
   const promptEngineer = () => {
     setPrompt('Jan 2021');
     setPrompt2('Pet Photos');
   };
 
-  const ImagePicker = () =>{
-    
-    let options = {
-      storageOptions:{
-        path:"image"
-      }
-    }
-    
-    launchImageLibrary(options,response=>{
-      setSelectImage(response.assets[0].uri)
-      console.log(response.assets[0].uri)
-    })
-  }
+  const ImagePickerFunction = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-  const handleUpload = () => {
-    // for uploading yay
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectImage(result.uri);
+      // The rest of your upload logic...
+      console.log("res", result)
+      uploadImage(result.assets[0]);
+    }
+  };
+
+  const uploadImage = async (selectImage) => {
+
+    console.log(selectImage)
+
+    const formData = new FormData();
+    formData.append('image',{
+      uri: selectImage.uri,
+      type: selectImage.type,
+      name: selectImage.fileName,
+    })
+
+    console.log(formData)
+    try {
+      const uploadResponse = await axios.post(
+        'http://192.168.2.83:8080/images/upload',
+        formData,
+        {  
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'x-access-token': user,
+          },
+        }
+      );
+
+      if (uploadResponse.status === 200) {
+        console.log('Image uploaded successfully!');
+        // Handle success
+      } else {
+        console.error('Image upload failed!');
+        // Handle error scenarios
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Handle network or other errors
+    }
   };
 
   useEffect(() => {
@@ -60,17 +105,17 @@ const UploadScreen = () => {
         <View style={styles.promptContainer}>
           <Text style={styles.prompt}>{prompt}</Text>
           <Text style={styles.prompt}>{prompt2}</Text>
-          <Image style={{height:400,width:"100%"}}source={{selectImage}}/>
+          <Image style={{ height: 400, width: '100%' }} source={{ selectImage }} />
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.uploadButton} 
-          onPress={() => {
-          //we will allow user to pick from their photo library here
-            ImagePicker();
-          
-        }}
-        >
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={() => {
+              // we will allow the user to pick from their photo library here
+              ImagePickerFunction();
+            }}
+          >
             <Text style={styles.buttonText}>Upload</Text>
           </TouchableOpacity>
         </View>
@@ -83,7 +128,7 @@ const styles = StyleSheet.create({
   prompt: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: '30%',
+    fontSize: 30,
     padding: 5,
   },
   container: {
