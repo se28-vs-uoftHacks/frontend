@@ -25,7 +25,6 @@ const BottomTabNavigator = () => {
           name="Account"
           component={AccountScreen}
           options={{
-            tabBarStyle: { display: 'none' },
             tabBarIcon: ({ focused, color, size }) => (
               <Ionicons
                 name={focused ? 'log-in' : 'log-in-outline'}
