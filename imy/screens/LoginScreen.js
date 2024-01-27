@@ -9,15 +9,14 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import flappyBgImage from '../assets/flappy_bg.jpg';
+import axios from 'axios';
+
 // import {
 //   useFonts,
 //   PressStart2P_400Regular,
 // } from '@expo-google-fonts/press-start-2p';
 // import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 // import { Poppins_400Regular } from '@expo-google-fonts/poppins';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// const BottomTab = createBottomTabNavigator();
 
 const LoginScreen = ({ navigation }) => {
   // let [fontsLoaded] = useFonts({
@@ -27,15 +26,38 @@ const LoginScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [forgotPasswordText, setForgotPasswordText] = useState('Forgot Password?')
 
   const handleLogin = () => {
     // whatever we need to do on the backend funky bs
     // for now i will just make this redirect to dashboard on enter
-    navigation.navigate('Dashboard');
+
+    const loginUser = async (username, password) => {
+      try {
+        const response = await axios.post('http://172.20.10.3:8080/users/signup', {
+          username: username,
+          password: password
+        });
+
+        if (response.status === 200) {
+          navigation.navigate('Dashboard');
+        }
+
+        console.log(response.data);
+        return response.data;
+        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    loginUser(username, password);
+
+    // navigation.navigate('Dashboard');
   };
 
   const handleForgotPassword = () => {
-    // a totally real forgot password button
+    setForgotPasswordText("sucks lmao don't forget next time");
   };
 
   return (
@@ -61,7 +83,7 @@ const LoginScreen = ({ navigation }) => {
             secureTextEntry
           />
           <Text style={styles.forgotPassword} onPress={handleForgotPassword}>
-            Forgot Password?
+            {forgotPasswordText}
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -98,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '35%',
+    marginTop: '30%',
   },
   inputContainer: {
     flex: 2,
