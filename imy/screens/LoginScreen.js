@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 import flappyBgImage from '../assets/flappy_bg.jpg';
 import axios from 'axios';
+import { useAuth } from '../hooks/AuthContext';
 
 // import {
 //   useFonts,
@@ -27,6 +28,7 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [forgotPasswordText, setForgotPasswordText] = useState('Forgot Password?')
+  const { signIn } = useAuth()
 
   const handleLogin = () => {
     // whatever we need to do on the backend funky bs
@@ -34,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('http://172.20.10.3:8080/users/signup', {
+        const response = await axios.post('http://backend-production-a339.up.railway.app/users/signup', {
           username: username,
           password: password
         });
@@ -44,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
         }
 
         console.log(response.data);
-        return response.data;
+        signIn(response.data.user)
         
       } catch (error) {
         console.error(error);
@@ -57,7 +59,13 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    setForgotPasswordText("sucks lmao don't forget next time");
+    if (forgotPasswordText === "Forgot Password?"){
+      setForgotPasswordText("sucks lmao don't forget next time");
+    } else {
+      setForgotPasswordText("Forgot Password?");
+    }
+
+  
   };
 
   return (
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
   welcome: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: '40%',
+    fontSize: 40,
   },
   container: {
     flex: 1,
