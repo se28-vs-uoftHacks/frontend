@@ -8,7 +8,7 @@ import {
   Button,
 } from 'react-native';
 import { useState } from 'react';
-import flappyBgImage from '../assets/flappy_bg.jpg';
+import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import {
   useFonts,
   PressStart2P_400Regular,
