@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   prompt: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: '30%',
+    fontSize: 30,
     padding: 5,
   },
   container: {

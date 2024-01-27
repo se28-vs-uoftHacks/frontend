@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('http://backend-production-a339.up.railway.app/users/signup', {
+        const response = await axios.post('http://backend-production-a339.up.railway.app/users/login', {
           username: username,
           password: password
         });
@@ -44,8 +44,7 @@ const LoginScreen = ({ navigation }) => {
         if (response.status === 200) {
           navigation.navigate('Dashboard');
         }
-
-        console.log(response.data);
+        
         signIn(response.data.user)
 
       } catch (error) {
@@ -72,9 +71,12 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.welcomeContainer}>
-          <Text style={styles.welcome}>Welcome</Text>
+          <Text style={styles.welcome}>Welcome!</Text>
         </View>
         <View style={styles.inputContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
+            <Text style={styles.signup}>No account yet? Make one here!</Text>
+          </TouchableOpacity>
           <TextInput
             style={styles.input}
             onChangeText={setUsername}
@@ -96,7 +98,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.enterButton} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Enter</Text>
+            <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buffer}></View>
@@ -185,6 +187,12 @@ const styles = StyleSheet.create({
   buffer: {
     height: 40,
   },
+  signup: {
+    color: 'white',
+    marginBottom: 30,
+    textDecorationLine: 'underline',
+    fontFamily: 'Poppins_400Regular',
+  }
 });
 
 export default LoginScreen;

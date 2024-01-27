@@ -5,6 +5,7 @@ import LoginScreen from './screens/LoginScreen';
 import UploadScreen from './screens/UploadScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import AccountScreen from './screens/AccountScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -88,7 +89,9 @@ export default function App() {
             component={LoginScreen}
             options={{ headerShown: false }}
           />
+           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
+    
     </NavigationContainer>
     </AuthContextProvider>
   );
