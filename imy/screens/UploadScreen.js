@@ -1,5 +1,6 @@
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import { useState, useEffect } from 'react';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -12,6 +13,7 @@ import {
   ImageBackground,
   TextInput,
   Button,
+  Image,
 } from 'react-native';
 
 const UploadScreen = () => {
@@ -22,12 +24,27 @@ const UploadScreen = () => {
   // right now, we don't have dynamic text/prompts but we will use something like this once we do
   const [prompt, setPrompt] = useState('');
   const [prompt2, setPrompt2] = useState(''); // we'll likely have two prompts e.g., jan 2021 and pet photos
+  const [selectImage, setSelectImage] = useState('');
 
   // pulls from the backend which generates the daily prompts
   const promptEngineer = () => {
     setPrompt('Jan 2021');
     setPrompt2('Pet Photos');
   };
+
+  const ImagePicker = () =>{
+    
+    let options = {
+      storageOptions:{
+        path:"image"
+      }
+    }
+    
+    launchImageLibrary(options,response=>{
+      setSelectImage(response.assets[0].uri)
+      console.log(response.assets[0].uri)
+    })
+  }
 
   const handleUpload = () => {
     // for uploading yay
@@ -43,10 +60,17 @@ const UploadScreen = () => {
         <View style={styles.promptContainer}>
           <Text style={styles.prompt}>{prompt}</Text>
           <Text style={styles.prompt}>{prompt2}</Text>
+          <Image style={{height:400,width:"100%"}}source={{selectImage}}/>
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
+          <TouchableOpacity style={styles.uploadButton} 
+          onPress={() => {
+          //we will allow user to pick from their photo library here
+            ImagePicker();
+          
+        }}
+        >
             <Text style={styles.buttonText}>Upload</Text>
           </TouchableOpacity>
         </View>

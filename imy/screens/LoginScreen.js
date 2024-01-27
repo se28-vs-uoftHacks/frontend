@@ -20,10 +20,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // const BottomTab = createBottomTabNavigator();
 
 const LoginScreen = ( { navigation }) => {
-  let [fontsLoaded] = useFonts({
-    PressStart2P_400Regular,
-    Prompt_400Regular,
-  });
+  // let [fontsLoaded] = useFonts({
+  //   PressStart2P_400Regular,
+  //   Prompt_400Regular,
+  // });
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
