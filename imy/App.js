@@ -1,6 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import LoginScreen from "./screens/LoginScreen"
+import UploadScreen from "./screens/LoginScreen"
+import Dashboard from "./screens/DashboardScreen"
 
 const Tab = createBottomTabNavigator()
 
@@ -19,8 +21,15 @@ export default function App() {
         //   })}
       >
         <Tab.Screen name="Login" component={LoginScreen} />
-        <Tab.Screen name="imyBoard" component={LoginScreen} />
+        <Tab.Screen name="Dashboard" component={LoginScreen} />
+        <Tab.Screen name="Upload" component={UploadScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   )
+
+  const BottomTabNavigator () => {
+    <Tab.Navigator>
+      
+    </Tab.Navigator>
+  }
 }
