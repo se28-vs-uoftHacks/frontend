@@ -9,21 +9,21 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import flappyBgImage from '../assets/flappy_bg.jpg';
-// import {
-//   useFonts,
-//   PressStart2P_400Regular,
-// } from '@expo-google-fonts/press-start-2p';
-// import { Prompt_400Regular } from '@expo-google-fonts/prompt';
-// import { Poppins_400Regular } from '@expo-google-fonts/poppins';
+import {
+  useFonts,
+  PressStart2P_400Regular,
+} from '@expo-google-fonts/press-start-2p';
+import { Prompt_400Regular } from '@expo-google-fonts/prompt';
+import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // const BottomTab = createBottomTabNavigator();
 
 const LoginScreen = ( { navigation }) => {
-  // let [fontsLoaded] = useFonts({
-  //   PressStart2P_400Regular,
-  //   Prompt_400Regular,
-  // });
+  let [fontsLoaded] = useFonts({
+    PressStart2P_400Regular,
+    Prompt_400Regular,
+  });
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +35,7 @@ const LoginScreen = ( { navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    // a totally real forgot password button
+    // a totally real forgot password button yay uwu
   };
 
   return (
