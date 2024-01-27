@@ -8,36 +8,70 @@ import {
   Button,
 } from 'react-native';
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
+import downPipe from '../assets/shorter_down_pipe.png';
+import upPipe from '../assets/short_up_pipe.png';
+import { Image } from 'react-native';
+import bird1 from '../birds/bird_1.png';
+import bird2 from '../birds/bird_2.png';
+import bird3 from '../birds/bird_3.png';
+import bird4 from '../birds/bird_4.png';
+import bird5 from '../birds/bird_5.png';
+import bird6 from '../birds/bird_6.png';
+import bird7 from '../birds/bird_7.png';
+import bird8 from '../birds/bird_8.png';
+import bird9 from '../birds/bird_9.png';
+import crown from '../assets/crown.png';
 
-const BirdRow = () => {
+const BirdRow = ({ birdImages, showCrown }) => {
   return (
     <View style={styles.flappyRow}>
-      <View style={styles.flappyBird} />
-      <View style={styles.flappyBird} />
-      <View style={styles.flappyBird} />
+      {birdImages.map((birdImage, index) => (
+        <View key={index}>
+          <Image source={birdImage} style={styles.flappyBird} />
+          {showCrown && index === 0 && (
+            <Image source={crown} style={styles.crownIcon} />
+          )}
+        </View>
+      ))}
     </View>
   );
 };
 
 const DashboardScreen = () => {
+  const birdImagesRow1 = [bird1, bird2, bird3];
+  const birdImagesRow2 = [bird4, bird5, bird6];
+  const birdImagesRow3 = [bird7, bird8, bird9];
+
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.dashboardContainer}>
           <View style={styles.gridItem}>
-            <View style={styles.pipeContainer}></View>
-            <BirdRow></BirdRow>
-            <View style={styles.pipe2Container}></View>
+            <View style={styles.pipe1Container}>
+              <Image source={downPipe} style={styles.pipe_down} />
+            </View>
+            <BirdRow birdImages={birdImagesRow1} showCrown={false} />
+            <View style={styles.pipe2Container}>
+              <Image source={upPipe} style={styles.pipe_up} />
+            </View>
           </View>
           <View style={styles.gridItem}>
-            <View style={styles.pipeContainer}></View>
-            <BirdRow></BirdRow>
-            <View style={styles.pipe2Container}></View>
+            <View style={styles.pipe3Container}>
+              <Image source={downPipe} style={styles.pipe_down} />
+            </View>
+            <BirdRow birdImages={birdImagesRow2} showCrown={false} />
+            <View style={styles.pipe4Container}>
+              <Image source={upPipe} style={styles.pipe_up} />
+            </View>
           </View>
           <View style={styles.gridItem}>
-            <View style={styles.pipeContainer}></View>
-            <BirdRow></BirdRow>
-            <View style={styles.pipe2Container}></View>
+            <View style={styles.pipe5Container}>
+              <Image source={downPipe} style={styles.pipe_down} />
+            </View>
+            <BirdRow birdImages={birdImagesRow3} showCrown={true} />
+            <View style={styles.pipe6Container}>
+              <Image source={upPipe} style={styles.pipe_up} />
+            </View>
           </View>
         </View>
       </ImageBackground>
@@ -64,26 +98,62 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gridItem: {
-    backgroundColor: 'blue',
+    //backgroundColor: 'blue',
     flex: 1, // Each grid item takes equal space
-    borderWidth: 1, // Add borders or styling as needed
     justifyContent: 'space-between',
     marginLeft: 10,
     marginRight: 10,
-    marginBottom: 95,
+    marginBottom: 96,
   },
-  pipeContainer: {
+  pipe1Container: {
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: 'red',
+    //backgroundColor: 'red',
     height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   pipe2Container: {
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: 'pink',
-    height: 160,
+    //backgroundColor: 'pink',
+    height: 230,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  pipe3Container: {
+    marginLeft: 10,
+    marginRight: 10,
+    //backgroundColor: 'red',
+    height: 260,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pipe4Container: {
+    marginLeft: 10,
+    marginRight: 10,
+    //backgroundColor: 'pink',
+    height: 170,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pipe5Container: {
+    marginLeft: 10,
+    marginRight: 10,
+    // backgroundColor: 'red',
+    height: 230,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pipe6Container: {
+    marginLeft: 10,
+    marginRight: 10,
+    //backgroundColor: 'pink',
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   flappyRow: {
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -92,11 +162,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flappyBird: {
-    backgroundColor: 'orange',
-    width: 20,
-    height: 20,
+    width: 56.6,
+    height: 40,
     margin: 20,
     borderRadius: 10, // Make it a circle
+    resizeMode: 'stretch',
+    position: 'relative',
+  },
+  pipe_down: {
+    flex: 1,
+    resizeMode: 'stretch',
+  },
+  pipe_up: {
+    flex: 1,
+    resizeMode: 'stretch',
+  },
+  crownIcon: {
+    position: 'absolute',
+    top: 5, // Adjust the positioning based on your design
+    left: 15,
+    width: 32.75,
+    height: 25.6,
+    transform: [{ rotate: '-30deg' }], // Adjust the degree of rotation
   },
 });
 
