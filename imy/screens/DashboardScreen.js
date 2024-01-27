@@ -21,8 +21,9 @@ import bird7 from '../birds/bird_7.png';
 import bird8 from '../birds/bird_8.png';
 import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
+import poopIcon from '../assets/poop.png';
 
-const BirdRow = ({ birdImages, showCrown }) => {
+const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   return (
     <View style={styles.flappyRow}>
       {birdImages.map((birdImage, index) => (
@@ -30,6 +31,9 @@ const BirdRow = ({ birdImages, showCrown }) => {
           <Image source={birdImage} style={styles.flappyBird} />
           {showCrown && index === 0 && (
             <Image source={crown} style={styles.crownIcon} />
+          )}
+          {showPoop && index === 2 && (
+            <Image source={poopIcon} style={styles.poopIcon} />
           )}
         </View>
       ))}
@@ -50,7 +54,11 @@ const DashboardScreen = () => {
             <View style={styles.pipe1Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow birdImages={birdImagesRow1} showCrown={false} />
+            <BirdRow
+              birdImages={birdImagesRow1}
+              showCrown={false}
+              showPoop={true}
+            />
             <View style={styles.pipe2Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
@@ -59,7 +67,11 @@ const DashboardScreen = () => {
             <View style={styles.pipe3Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow birdImages={birdImagesRow2} showCrown={false} />
+            <BirdRow
+              birdImages={birdImagesRow2}
+              showCrown={false}
+              showPoop={false}
+            />
             <View style={styles.pipe4Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
@@ -68,7 +80,11 @@ const DashboardScreen = () => {
             <View style={styles.pipe5Container}>
               <Image source={downPipe} style={styles.pipe_down} />
             </View>
-            <BirdRow birdImages={birdImagesRow3} showCrown={true} />
+            <BirdRow
+              birdImages={birdImagesRow3}
+              showCrown={true}
+              showPoop={false}
+            />
             <View style={styles.pipe6Container}>
               <Image source={upPipe} style={styles.pipe_up} />
             </View>
@@ -184,6 +200,14 @@ const styles = StyleSheet.create({
     width: 32.75,
     height: 25.6,
     transform: [{ rotate: '-30deg' }], // Adjust the degree of rotation
+  },
+  poopIcon: {
+    position: 'absolute',
+    top: -2, // Adjust the positioning based on your design
+    left: 17,
+    width: 30.8,
+    height: 32,
+    transform: [{ rotate: '-22deg' }], // Adjust the degree of rotation
   },
 });
 
