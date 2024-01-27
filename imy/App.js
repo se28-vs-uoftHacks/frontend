@@ -28,7 +28,7 @@ const BottomTabNavigator = () => {
           options={{
             tabBarIcon: ({ focused, color, size }) => (
               <Ionicons
-                name={focused ? 'log-in' : 'log-in-outline'}
+                name={focused ? 'person' : 'person-circle-outline'}
                 size={size}
                 color={'#059905'}
 
@@ -72,23 +72,28 @@ export default function App() {
     Prompt_400Regular,
     Poppins_400Regular,
   });
+  
+  if (!fontsLoaded) {
+    return;
+  } 
 
   return (
     <AuthContextProvider>
     <NavigationContainer>
-      <Stack.Navigator
+      <Stack.Navigator initialRouteName="Login"
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
         }}
       >
-        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+
           <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
           />
+        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
     

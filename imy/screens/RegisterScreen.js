@@ -41,7 +41,7 @@ import {
           });
   
           if (response.status === 200) {
-            navigation.navigate('Dashboard');
+            navigation.navigate('TabNavigator', { screen: 'Dashboard' })
           }
   
           console.log(response.data);
