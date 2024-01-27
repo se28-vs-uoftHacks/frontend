@@ -15,8 +15,11 @@ import {
 } from '@expo-google-fonts/press-start-2p';
 import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 import { Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const LoginScreen = () => {
+const BottomTab = createBottomTabNavigator();
+
+const LoginScreen = ( { navigation }) => {
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
     Prompt_400Regular,
@@ -27,6 +30,8 @@ const LoginScreen = () => {
 
   const handleLogin = () => {
     // whatever we need to do on the backend funky bs
+    // for now i will just make this redirect to dashboard on enter
+    navigation.navigate('Dashboard');
   };
 
   const handleForgotPassword = () => {
@@ -69,11 +74,15 @@ const LoginScreen = () => {
   );
 };
 
+LoginScreen.options = {
+  headerShown: false,
+};
+
 const styles = StyleSheet.create({
   welcome: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: '40px',
+    fontSize: '40%',
   },
   container: {
     flex: 1,

@@ -17,16 +17,18 @@ const Stack = createStackNavigator();
 
 const BottomTabNavigator = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Login"
         component={LoginScreen}
         options={{
+          tabBarStyle: { display: 'none' },
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
               name={focused ? 'log-in' : 'log-in-outline'}
               size={size}
               color={'#059905'}
+
             />
           ),
         }}
@@ -78,6 +80,11 @@ export default function App() {
         }}
       >
         <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
