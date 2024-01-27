@@ -18,7 +18,7 @@ import axios from 'axios';
 // import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 // import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 
-const LoginScreen = ( { navigation }) => {
+const LoginScreen = ({ navigation }) => {
   // let [fontsLoaded] = useFonts({
   //   PressStart2P_400Regular,
   //   Prompt_400Regular,
@@ -91,8 +91,7 @@ const LoginScreen = ( { navigation }) => {
             <Text style={styles.buttonText}>Enter</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.buffer}>
-        </View>
+        <View style={styles.buffer}></View>
       </ImageBackground>
     </View>
   );
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
   },
   buffer: {
     height: 40,
-  }
+  },
 });
 
 export default LoginScreen;
