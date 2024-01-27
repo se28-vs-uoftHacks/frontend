@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   welcome: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: '40%',
+    fontSize: '40px',
   },
   container: {
     flex: 1,
