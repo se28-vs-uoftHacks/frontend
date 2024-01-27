@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
-import UploadScreen from './screens/LoginScreen';
+import UploadScreen from './screens/UploadScreen';
 import Dashboard from './screens/DashboardScreen';
 import {
   useFonts,
@@ -77,9 +77,7 @@ export default function App() {
           tabBarInactiveTintColor: 'gray',
         }}
       >
-        <Tab.Screen name="Login" component={LoginScreen} />
-        <Tab.Screen name="Dashboard" component={DashboardScreen} />
-        <Tab.Screen name="Upload" component={UploadScreen} />
+        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
