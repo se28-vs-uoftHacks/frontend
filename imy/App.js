@@ -11,55 +11,59 @@ import {
 import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthContextProvider } from './hooks/AuthContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const BottomTabNavigator = () => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{
-          tabBarStyle: { display: 'none' },
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? 'log-in' : 'log-in-outline'}
-              size={size}
-              color={'#059905'}
 
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? 'calendar' : 'calendar-outline'}
-              size={size}
-              color={'#059905'}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Upload"
-        component={UploadScreen}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? 'home' : 'home-outline'}
-              size={size}
-              color={'#059905'}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <AuthContextProvider>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            tabBarStyle: { display: 'none' },
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? 'log-in' : 'log-in-outline'}
+                size={size}
+                color={'#059905'}
+
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? 'calendar' : 'calendar-outline'}
+                size={size}
+                color={'#059905'}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Upload"
+          component={UploadScreen}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons
+                name={focused ? 'home' : 'home-outline'}
+                size={size}
+                color={'#059905'}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </AuthContextProvider>
   );
 };
 
