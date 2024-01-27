@@ -19,7 +19,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // const BottomTab = createBottomTabNavigator();
 
-const LoginScreen = ( { navigation }) => {
+const LoginScreen = ({ navigation }) => {
   // let [fontsLoaded] = useFonts({
   //   PressStart2P_400Regular,
   //   Prompt_400Regular,
@@ -69,8 +69,7 @@ const LoginScreen = ( { navigation }) => {
             <Text style={styles.buttonText}>Enter</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.buffer}>
-        </View>
+        <View style={styles.buffer}></View>
       </ImageBackground>
     </View>
   );
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
   },
   buffer: {
     height: 40,
-  }
+  },
 });
 
 export default LoginScreen;
