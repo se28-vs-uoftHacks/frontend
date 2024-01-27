@@ -35,6 +35,7 @@ const UploadScreen = () => {
     setPrompt2('Pet Photos');
   };
 
+  //this allows user to upload image
   const ImagePickerFunction = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -52,7 +53,6 @@ const UploadScreen = () => {
 
     if (!result.cancelled) {
       setSelectImage(result.uri);
-      // The rest of your upload logic...
       console.log("res", result)
       uploadImage(result.assets[0]);
     }
@@ -64,6 +64,7 @@ const UploadScreen = () => {
 
     const formData = new FormData();
     formData.append('image',{
+      //endpoints that we send
       uri: selectImage.uri,
       type: selectImage.type,
       name: selectImage.fileName,
@@ -71,13 +72,13 @@ const UploadScreen = () => {
 
     console.log(formData)
     try {
-      const uploadResponse = await axios.post(
-        'http://192.168.2.83:8080/images/upload',
+      const uploadResponse = await axios.post( //we are using axios to post data to backend
+        'http://backend-production-a339.up.railway.app/images/upload',
         formData,
         {  
           headers: {
             'Content-Type': 'multipart/form-data',
-            'x-access-token': user,
+            'x-access-token': user,//we use user as the token key
           },
         }
       );
@@ -105,7 +106,6 @@ const UploadScreen = () => {
         <View style={styles.promptContainer}>
           <Text style={styles.prompt}>{prompt}</Text>
           <Text style={styles.prompt}>{prompt2}</Text>
-          <Image style={{ height: 400, width: '100%' }} source={{ selectImage }} />
         </View>
 
         <View style={styles.buttonContainer}>

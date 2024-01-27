@@ -38,7 +38,7 @@ const LoginScreen = ( { navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('http://192.168.2.83:8080/users/signup', {
+        const response = await axios.post('backend-production-a339.up.railway.app/users/signup', {
           username: username,
           password: password
         });
