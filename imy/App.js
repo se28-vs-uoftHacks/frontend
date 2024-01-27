@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import UploadScreen from './screens/UploadScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import AccountScreen from './screens/AccountScreen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -19,11 +20,10 @@ const Stack = createStackNavigator();
 const BottomTabNavigator = () => {
   return (
 
-    <AuthContextProvider>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen
-          name="Login"
-          component={LoginScreen}
+          name="Account"
+          component={AccountScreen}
           options={{
             tabBarStyle: { display: 'none' },
             tabBarIcon: ({ focused, color, size }) => (
@@ -63,7 +63,6 @@ const BottomTabNavigator = () => {
           }}
         />
       </Tab.Navigator>
-    </AuthContextProvider>
   );
 };
 
@@ -75,6 +74,7 @@ export default function App() {
   });
 
   return (
+    <AuthContextProvider>
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
@@ -91,5 +91,6 @@ export default function App() {
           />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthContextProvider>
   );
 }

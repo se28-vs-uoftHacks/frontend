@@ -12,18 +12,18 @@ import flappyBgImage from '../assets/flappy_bg.jpg';
 import axios from 'axios';
 import { useAuth } from '../hooks/AuthContext';
 
-// import {
-//   useFonts,
-//   PressStart2P_400Regular,
-// } from '@expo-google-fonts/press-start-2p';
-// import { Prompt_400Regular } from '@expo-google-fonts/prompt';
-// import { Poppins_400Regular } from '@expo-google-fonts/poppins';
+import {
+  useFonts,
+  PressStart2P_400Regular,
+} from '@expo-google-fonts/press-start-2p';
+import { Prompt_400Regular } from '@expo-google-fonts/prompt';
+import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 const LoginScreen = ({ navigation }) => {
-  // let [fontsLoaded] = useFonts({
-  //   PressStart2P_400Regular,
-  //   Prompt_400Regular,
-  // });
+  let [fontsLoaded] = useFonts({
+    PressStart2P_400Regular,
+    Prompt_400Regular,
+  });
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -47,25 +47,25 @@ const LoginScreen = ({ navigation }) => {
 
         console.log(response.data);
         signIn(response.data.user)
-        
+
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     loginUser(username, password);
 
     // navigation.navigate('Dashboard');
   };
 
   const handleForgotPassword = () => {
-    if (forgotPasswordText === "Forgot Password?"){
+    if (forgotPasswordText === "Forgot Password?") {
       setForgotPasswordText("sucks lmao don't forget next time");
     } else {
       setForgotPasswordText("Forgot Password?");
     }
 
-  
+
   };
 
   return (
