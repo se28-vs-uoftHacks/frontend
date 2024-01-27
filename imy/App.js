@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import UploadScreen from './screens/UploadScreen';
-import Dashboard from './screens/DashboardScreen';
+import DashboardScreen from './screens/DashboardScreen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -33,7 +33,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Dashboard"
-        component={LoginScreen}
+        component={DashboardScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
