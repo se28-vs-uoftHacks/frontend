@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginScreen from './screens/LoginScreen';
-import UploadScreen from "./screens/LoginScreen"
+import UploadScreen from "./screens/UploadScreen"
 import Dashboard from "./screens/DashboardScreen"
 import {
   useFonts,
@@ -39,9 +39,10 @@ export default function App() {
     </NavigationContainer>
   )
 
-  const BottomTabNavigator () => {
-    <Tab.Navigator>
+  // const BottomTabNavigator () => {
+  //   <Tab.Navigator>
       
-    </Tab.Navigator>
-  }
+  //   </Tab.Navigator>
+  // }
+
 }
