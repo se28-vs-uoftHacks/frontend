@@ -10,7 +10,7 @@ import {
 } from '@expo-google-fonts/press-start-2p';
 import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 import { Poppins_400Regular } from '@expo-google-fonts/poppins';
-import DashboardScreen from './screens/DashboardScreen';
+import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
