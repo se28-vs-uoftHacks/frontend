@@ -22,26 +22,31 @@ import bird8 from '../birds/bird_8.png';
 import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
+import ground from '../assets/ground.jpg';
 import { useEffect } from 'react';
 
-
 // make birds shake lmao
-const shakeAnimation = new Animated.Value(0);
+const shakeAnimation = new Animated.Value(-300);
 
 const startShake = () => {
   Animated.sequence([
-    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: -10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: 0, duration: 100, useNativeDriver: true })
+    Animated.timing(shakeAnimation, {
+      toValue: 300,
+      duration: 4000,
+      useNativeDriver: true,
+    }), // Move down
+    Animated.timing(shakeAnimation, {
+      toValue: -300,
+      duration: 0,
+      useNativeDriver: true,
+    }), // Reset position
   ]).start(() => startShake()); // Restart the animation when it's finished
-}
-// Use the animated value in your styles
-const shakeStyle = {
-  transform: [{ translateX: shakeAnimation }]
 };
 
-
+// Use the animated value in your styles
+const shakeStyle = {
+  transform: [{ translateY: shakeAnimation }],
+};
 
 const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   return (
@@ -61,7 +66,6 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   );
 };
 
-
 const DashboardScreen = () => {
   const birdImagesRow1 = [bird1, bird2, bird3];
   const birdImagesRow2 = [bird4, bird5, bird6];
@@ -70,7 +74,7 @@ const DashboardScreen = () => {
   useEffect(() => {
     startShake();
   }, []);
-  
+
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
@@ -121,6 +125,10 @@ const DashboardScreen = () => {
             </View>
           </View>
         </View>
+
+        <View style={styles.groundContainer}>
+          <Image source={ground} style={styles.ground_image} />
+        </View>
       </ImageBackground>
     </View>
   );
@@ -153,6 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 96,
   },
   pipe1Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'red',
@@ -161,6 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe2Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -169,6 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe3Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'red',
@@ -177,6 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe4Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -185,6 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe5Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     // backgroundColor: 'red',
@@ -193,6 +206,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe6Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -202,6 +216,7 @@ const styles = StyleSheet.create({
   },
 
   flappyRow: {
+    zIndex: 2,
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: '100%', // Ensure it takes the full width
@@ -209,6 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flappyBird: {
+    zIndex: 2,
     width: 56.6,
     height: 40,
     margin: 20,
@@ -239,6 +255,16 @@ const styles = StyleSheet.create({
     width: 30.8,
     height: 32,
     transform: [{ rotate: '-22deg' }], // Adjust the degree of rotation
+  },
+  groundContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+  },
+  ground_image: {
+    resizeMode: 'cover',
   },
 });
 
