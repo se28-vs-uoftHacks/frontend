@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   selectedSprite: {
     width: 170,
     height: 120,
-    marginTop: '-50%',
+    marginTop: '-45%',
   },
   flatList: {
     flex: 4,
@@ -188,11 +188,13 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
   },
   enterButton: {
+    justifyContent: 'center',
     backgroundColor: '#0CA41C',
     padding: 5,
     borderRadius: 20,
     alignItems: 'center',
     width: '70%',
+    height: '130%', // adjust here
     textAlign: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -214,12 +216,14 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   saveButton: {
+    justifyContent: 'center',
     backgroundColor: '#0CA41C',
     padding: 5,
     borderRadius: 15,
     marginTop: '8%',
     alignItems: 'center',
     width: '40%',
+    height: '60%', // adjust here
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
