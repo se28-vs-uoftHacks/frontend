@@ -24,7 +24,7 @@ const shakeAnimation = new Animated.Value(-250);
 const startFullTravel = (setIsIconVisible) => {
   Animated.sequence([
     Animated.timing(shakeAnimation, {
-      toValue: -250, // Adjust the value to move birds above the screen
+      toValue: -270, // Adjust the value to move birds above the screen
       duration: 0, // No duration, immediate move
       useNativeDriver: true,
     }),
@@ -35,7 +35,7 @@ const startFullTravel = (setIsIconVisible) => {
       useNativeDriver: true,
     }),
     Animated.timing(shakeAnimation, {
-      toValue: -250, // Adjust the value to move birds above the screen
+      toValue: -270, // Adjust the value to move birds above the screen
       duration: 0, // No duration, immediate move
       useNativeDriver: true,
     }),
@@ -117,7 +117,8 @@ const DashboardScreen = () => {
     };
 
     fetchData(); // Call the function to make the request
-  }, []);
+
+  }, [isIconVisible]);
 
   return (
     <View style={styles.container}>

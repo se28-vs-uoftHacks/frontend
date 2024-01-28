@@ -31,21 +31,6 @@ import {
   FlatList,
 } from 'react-native';
 
-//random prompt + time generator
-const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-
-//function to generate a random time
-const getRandomPastDate = () => {
-  const currentDate = new Date();
-  const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
-  const pastDate = new Date(currentDate);
-  pastDate.setDate(currentDate.getDate() - randomDaysAgo);
-
-  return pastDate;
-};
-
-const randomPastDate = getRandomPastDate();
-
 const UploadScreen = () => {
   const images = Array(16).fill(placeHolderImage); // temporary — we can link to db to determine #
   const [isHeartRed, setHeartRed] = useState(false); // for liked
@@ -69,32 +54,10 @@ const UploadScreen = () => {
   
     return pastDate;
   };
-//random prompt + time generator
-const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-
-//function to generate a random time
-const getRandomPastDate = () => {
-  const currentDate = new Date();
-  const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
-  const pastDate = new Date(currentDate);
-  pastDate.setDate(currentDate.getDate() - randomDaysAgo);
-
-  return pastDate;
-};
 
 const randomPastDate = getRandomPastDate();
 
-  // right now, we don't have dynamic text/prompts, but we will use something like this once we do
-const UploadScreen = () => {
-  const images = Array(16).fill(placeHolderImage); // temporary — we can link to db to determine #
-  const [isHeartRed, setHeartRed] = useState(false); // for liked
-  const [likedImages, setLikedImages] = useState(
-    Array(images.length).fill(false)
-  );
-
-  let [fontsLoaded] = useFonts({
-    PressStart2P_400Regular,
-  });
+  
 
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
@@ -117,10 +80,6 @@ const UploadScreen = () => {
     fetchData();
   }, []);
 
-  // const promptEngineer = () => {
-  //   setPrompt('Jan 2021');
-  //   setPrompt2('Pet Photos');
-  // };
 
   // display all images
 
@@ -186,9 +145,6 @@ const UploadScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   promptEngineer();
-  // }, []);
 
   return (
     <View style={styles.container}>

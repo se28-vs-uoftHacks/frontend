@@ -83,6 +83,7 @@ const AccountScreen = ({ navigation }) => {
 
       if (response.status === 200) {
         console.log(response.data);
+        navigation.navigate('Dashboard', { isIconVisible: true });
       }
     }catch (error) {
       console.error(error);
