@@ -14,10 +14,9 @@ import flappyBgImage from '../assets/account.jpg';
 import { useAuth } from '../hooks/AuthContext';
 import axios from 'axios';
 
-
 const AccountScreen = ({ navigation }) => {
   const { user } = useAuth();
-  
+
   const [selectedSprite, setSelectedSprite] = useState(null);
   //change this to be the user's when they fetch
   const [selectedSpriteNum, setSelectedSpriteNum] = useState(1);
@@ -67,7 +66,7 @@ const AccountScreen = ({ navigation }) => {
 
   //sends the sprite to the backend
   const sendSavedSprite = async () => {
-    console.log(selectedSpriteNum)
+    console.log(selectedSpriteNum);
     try {
       const response = await axios.put(
         'http://192.168.2.83:8080/dashboard/profileIcon',
@@ -85,10 +84,10 @@ const AccountScreen = ({ navigation }) => {
         console.log(response.data);
         navigation.navigate('Dashboard', { isIconVisible: true });
       }
-    }catch (error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -211,8 +210,8 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontFamily: 'PressStart2P_400Regular',
-    fontSize: 16, 
-    color: 'white', 
+    fontSize: 16,
+    color: 'white',
   },
   saveButton: {
     backgroundColor: '#0CA41C',
