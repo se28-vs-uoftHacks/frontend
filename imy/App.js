@@ -14,7 +14,6 @@ import { Prompt_400Regular } from '@expo-google-fonts/prompt';
 import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContextProvider } from './hooks/AuthContext';
-import MusicPlayer from './MusicPlayer';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
