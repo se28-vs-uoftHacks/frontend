@@ -295,7 +295,7 @@ const UploadScreen = () => {
                   </TouchableOpacity>
                 )}
                 <Image
-                  source={getBirdFileName(Math.floor(Math.random() * 15))}
+                  source={getBirdFileName(4)}
                   style={[styles.icon, !item && { opacity: 0 }]}
                 />
               </View>
