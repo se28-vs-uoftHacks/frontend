@@ -170,11 +170,11 @@ const styles = StyleSheet.create({
   selectedSprite: {
     width: 170,
     height: 120,
-    marginTop: '-45%',
+    marginTop: '-40%',
   },
   flatList: {
     flex: 4,
-    marginTop: 10,
+    marginTop: 0,
     backgroundColor: 'white',
   },
   spriteItem: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0CA41C',
     padding: 5,
     borderRadius: 15,
-    marginTop: '8%',
+    marginTop: '6%',
     alignItems: 'center',
     width: '40%',
     height: '60%', // adjust here
