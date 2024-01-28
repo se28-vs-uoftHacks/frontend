@@ -44,7 +44,7 @@ const RegisterScreen = ({ navigation }) => {
         );
 
         if (response.status === 200) {
-            signIn(response.data.user);
+          signIn(response.data.user);
           navigation.navigate('TabNavigator', { screen: 'Dashboard' });
         }
 

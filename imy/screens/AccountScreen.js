@@ -69,7 +69,7 @@ const AccountScreen = ({ navigation }) => {
     console.log(selectedSpriteNum);
     try {
       const response = await axios.put(
-        'http://192.168.2.83:8080/dashboard/profileIcon',
+        'http://backend-production-a339.up.railway.app/dashboard/profileIcon',
         {
           profileIcon: selectedSpriteNum,
         },

@@ -31,9 +31,8 @@ import {
   Button,
   Image,
   FlatList,
-  LogBox
+  LogBox,
 } from 'react-native';
-
 
 const UploadScreen = () => {
   const [likedImages, setLikedImages] = useState([]);
@@ -41,21 +40,23 @@ const UploadScreen = () => {
   const [imageCount, setImageCount] = useState(0);
   const [alreadyUploaded, setAlreadyUploaded] = useState(false);
   const [isOwner, setIsOwner] = useState([]);
-  const [randomPrompt] = useState(() => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
+  const [randomPrompt] = useState(
+    () => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]
+  );
   const [imageId, setImageId] = useState([]);
   const [likes, setLikes] = useState([]);
 
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
   });
-  
+
   //function to generate a random time
   const getRandomPastDate = () => {
     const currentDate = new Date();
     const randomDaysAgo = Math.floor(Math.random() * 3650); // Random number of days ago (up to a year)
     const pastDate = new Date(currentDate);
     pastDate.setDate(currentDate.getDate() - randomDaysAgo);
-  
+
     return pastDate;
   };
 
@@ -68,28 +69,30 @@ const UploadScreen = () => {
   useEffect(() => {
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']); // stupid annoying errors go byebye
 
-    const fetchData = async() => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.2.83:8080/images', {
-          headers: {
-            'x-access-token': user, // we use user as the token key
-          },
-        });
+        const response = await axios.get(
+          'http://backend-production-a339.up.railway.app/images',
+          {
+            headers: {
+              'x-access-token': user, // we use user as the token key
+            },
+          }
+        );
 
         console.log(response.data.images[0]._doc.likes);
 
-        response.data.images.forEach(image => {
+        response.data.images.forEach((image) => {
           // console.log(image._doc.likes);
         });
 
         setImageCount(response.data.images.length);
         setLikedImages(Array(response.data.length).fill(false));
-        setImages(response.data.images.map(image => image._doc.image));
-        setIsOwner(response.data.images.map(image => image.isOwner));
-        setImageId(response.data.images.map(image => image._doc._id));
-        setLikes(response.data.images.map(image => image._doc.likes));
-      
-      } catch (error){
+        setImages(response.data.images.map((image) => image._doc.image));
+        setIsOwner(response.data.images.map((image) => image.isOwner));
+        setImageId(response.data.images.map((image) => image._doc._id));
+        setLikes(response.data.images.map((image) => image._doc.likes));
+      } catch (error) {
         console.error('Error fetching data from API', error);
       }
     };
@@ -97,20 +100,18 @@ const UploadScreen = () => {
     fetchData();
   }, [alreadyUploaded]);
 
-
-
   // display all images
 
   //this allows user to upload image
   const ImagePickerFunction = async () => {
-
     if (alreadyUploaded) {
       console.log('You have already uploaded an image.');
       alert('You have already uploaded an image today. Come back tomorrow!');
       return;
     }
 
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!');
@@ -144,8 +145,9 @@ const UploadScreen = () => {
 
     console.log(formData);
     try {
-      const uploadResponse = await axios.post( //we are using axios to post data to backend
-        'http://192.168.2.83:8080/images/upload',
+      const uploadResponse = await axios.post(
+        //we are using axios to post data to backend
+        'http://backend-production-a339.up.railway.app/images/upload',
         formData,
         {
           headers: {
@@ -170,7 +172,6 @@ const UploadScreen = () => {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
@@ -186,71 +187,93 @@ const UploadScreen = () => {
             renderItem={({ item, index }) => (
               <View style={styles.imageContainer}>
                 <TouchableOpacity activeOpacity={1}>
-                  <Lightbox renderContent={() => (
-                    <View style={styles.lightboxImageContainer}>
-                        <Image source={{ uri: item }} style={styles.lightboxImage} />
-                    </View>
-                  )}>
-                        <Image source={{ uri: item }} style={styles.image} />
+                  <Lightbox
+                    renderContent={() => (
+                      <View style={styles.lightboxImageContainer}>
+                        <Image
+                          source={{ uri: item }}
+                          style={styles.lightboxImage}
+                        />
+                      </View>
+                    )}
+                  >
+                    <Image source={{ uri: item }} style={styles.image} />
                   </Lightbox>
-                  </TouchableOpacity>
-                    
+                </TouchableOpacity>
 
                 {!isOwner[index] && (
-                  <TouchableOpacity activeOpacity={1} onPress={async () => {
-                    const newLikedImages = [...likedImages];
-                    newLikedImages[index] = !newLikedImages[index];
-                    setLikedImages(newLikedImages);
-                  
-                    if (newLikedImages[index]) {
-                      try {
-                        const response = await axios.put(`http://192.168.2.83:8080/images/like/${imageId[index]}`, {}, {
-                          headers: {
-                            'x-access-token': user, // we use user as the token key
-                          },
-                        });
-                  
-                        if (response.status !== 200) {
-                          throw new Error('Response not OK');
-                        }
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={async () => {
+                      const newLikedImages = [...likedImages];
+                      newLikedImages[index] = !newLikedImages[index];
+                      setLikedImages(newLikedImages);
 
-                        // update likes count
-                        const newLikes = [...likes];
-                        newLikes[index]++;
-                        setLikes(newLikes);
+                      if (newLikedImages[index]) {
+                        try {
+                          const response = await axios.put(
+                            `http://backend-production-a339.up.railway.app/images/like/${imageId[index]}`,
+                            {},
+                            {
+                              headers: {
+                                'x-access-token': user, // we use user as the token key
+                              },
+                            }
+                          );
 
-                      } catch (error) {
-                        console.error('Error liking image', error);
-                      }
-                    } else {
-                      try {
-                        const response = await axios.put(`http://192.168.2.83:8080/images/unlike/${imageId[index]}`, {}, {
-                          headers: {
-                            'x-access-token': user, // we use user as the token key
-                          },
-                        });
-                  
-                        if (response.status !== 200) {
-                          throw new Error('Response not OK');
+                          if (response.status !== 200) {
+                            throw new Error('Response not OK');
+                          }
+
+                          // update likes count
+                          const newLikes = [...likes];
+                          newLikes[index]++;
+                          setLikes(newLikes);
+                        } catch (error) {
+                          console.error('Error liking image', error);
                         }
-                  
-                        // update likes count
-                        const newLikes = [...likes];
-                        newLikes[index]--;
-                        setLikes(newLikes);
-                  
-                      } catch (error) {
-                        console.error('Error unliking image', error);
+                      } else {
+                        try {
+                          const response = await axios.put(
+                            `http://backend-production-a339.up.railway.app/images/unlike/${imageId[index]}`,
+                            {},
+                            {
+                              headers: {
+                                'x-access-token': user, // we use user as the token key
+                              },
+                            }
+                          );
+
+                          if (response.status !== 200) {
+                            throw new Error('Response not OK');
+                          }
+
+                          // update likes count
+                          const newLikes = [...likes];
+                          newLikes[index]--;
+                          setLikes(newLikes);
+                        } catch (error) {
+                          console.error('Error unliking image', error);
+                        }
                       }
-                    }
-                  }}>
+                    }}
+                  >
                     <Ionicons
                       name={likedImages[index] ? 'heart' : 'heart-outline'}
                       size={30}
                       color={likedImages[index] ? 'red' : 'white'}
                       style={{ position: 'absolute', top: -130, right: -70 }}
                     />
-                    <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'black' : 'white', fontSize: 8 }}>
+                    <Text
+                      style={{
+                        position: 'absolute',
+                        top: -119,
+                        right: -59,
+                        fontFamily: 'PressStart2P_400Regular',
+                        color: likedImages[index] ? 'black' : 'white',
+                        fontSize: 8,
+                      }}
+                    >
                       {likes[index] > 0 ? likes[index] : null}
                     </Text>
                   </TouchableOpacity>
@@ -388,13 +411,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lightboxImage: {
-    width: '100%', 
-    height: '100%', 
-    resizeMode: 'contain', 
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
     borderRadius: 20,
     borderColor: '#F1FF8F',
     borderWidth: 10,
-  }
+  },
 });
 
 export default UploadScreen;
