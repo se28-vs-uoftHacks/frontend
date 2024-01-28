@@ -1,5 +1,9 @@
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from '../hooks/AuthContext';
+
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -12,6 +16,7 @@ import {
   ImageBackground,
   TextInput,
   Button,
+  Image,
 } from 'react-native';
 
 const UploadScreen = () => {
@@ -19,18 +24,76 @@ const UploadScreen = () => {
     PressStart2P_400Regular,
   });
 
-  // right now, we don't have dynamic text/prompts but we will use something like this once we do
+  // right now, we don't have dynamic text/prompts, but we will use something like this once we do
   const [prompt, setPrompt] = useState('');
   const [prompt2, setPrompt2] = useState(''); // we'll likely have two prompts e.g., jan 2021 and pet photos
+  const [selectImage, setSelectImage] = useState('');
+  const { user } = useAuth();
 
-  // pulls from the backend which generates the daily prompts
   const promptEngineer = () => {
     setPrompt('Jan 2021');
     setPrompt2('Pet Photos');
   };
 
-  const handleUpload = () => {
-    // for uploading yay
+  //this allows user to upload image
+  const ImagePickerFunction = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectImage(result.uri);
+      console.log("res", result)
+      uploadImage(result.assets[0]);
+    }
+  };
+
+  const uploadImage = async (selectImage) => {
+
+    console.log(selectImage)
+
+    const formData = new FormData();
+    formData.append('image',{
+      //endpoints that we send
+      uri: selectImage.uri,
+      type: selectImage.type,
+      name: selectImage.fileName,
+    })
+
+    console.log(formData)
+    try {
+      const uploadResponse = await axios.post( //we are using axios to post data to backend
+        'http://backend-production-a339.up.railway.app/images/upload',
+        formData,
+        {  
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'x-access-token': user,//we use user as the token key
+          },
+        }
+      );
+
+      if (uploadResponse.status === 200) {
+        console.log('Image uploaded successfully!');
+        // Handle success
+      } else {
+        console.error('Image upload failed!');
+        // Handle error scenarios
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Handle network or other errors
+    }
   };
 
   useEffect(() => {
@@ -46,7 +109,13 @@ const UploadScreen = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={() => {
+              // we will allow the user to pick from their photo library here
+              ImagePickerFunction();
+            }}
+          >
             <Text style={styles.buttonText}>Upload</Text>
           </TouchableOpacity>
         </View>

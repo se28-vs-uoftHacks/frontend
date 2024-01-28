@@ -20,7 +20,8 @@ import { useAuth } from '../hooks/AuthContext';
 // import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 
-const LoginScreen = ({ navigation }) => {
+
+const LoginScreen = ( { navigation }) => {
   // let [fontsLoaded] = useFonts({
   //   PressStart2P_400Regular,
   //   Prompt_400Regular,
@@ -37,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('http://backend-production-a339.up.railway.app/users/login', {
+        const response = await axios.post('backend-production-a339.up.railway.app/users/signup', {
           username: username,
           password: password
         });
@@ -59,13 +60,13 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    if (forgotPasswordText === "Forgot Password?") {
+    if (forgotPasswordText === "Forgot Password?"){
       setForgotPasswordText("sucks lmao don't forget next time");
     } else {
       setForgotPasswordText("Forgot Password?");
     }
 
-
+  
   };
 
   return (
