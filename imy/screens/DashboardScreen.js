@@ -15,13 +15,20 @@ import { Image, Animated } from 'react-native';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
 import ground from '../assets/ground.jpg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 // make birds shake lmao
 const shakeAnimation = new Animated.Value(-250);
 
 const startFullTravel = () => {
   Animated.sequence([
+    Animated.timing(shakeAnimation, {
+      toValue: -250, // Adjust the value to move birds above the screen
+      duration: 0, // No duration, immediate move
+      useNativeDriver: true,
+    }),
+    Animated.delay(500),
     Animated.timing(shakeAnimation, {
       toValue: 280,
       duration: 2500, // Adjust the duration for the full travel
@@ -79,9 +86,16 @@ const DashboardScreen = () => {
   const birdImagesRow2 = birdList.slice(3, 6);
   const birdImagesRow1 = birdList.slice(6, 9);
 
-  useEffect(() => {
-    startFullTravel();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Trigger shake animation when the screen is focused
+      startFullTravel();
+      // Cleanup function when the screen is unfocused
+      return () => {
+        // You can perform cleanup here if needed
+      };
+    }, [])
+  );
 
   useEffect(() => {
     const fetchData = async () => {
