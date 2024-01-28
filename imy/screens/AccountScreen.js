@@ -143,7 +143,8 @@ const styles = StyleSheet.create({
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
     fontSize: 40,
-    marginTop: '5%',
+    marginTop: '0%',
+    paddingTop: 10,
   },
   container: {
     flex: 1,
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   selectedSprite: {
     width: 170,
     height: 120,
-    marginTop: '-40%',
+    marginTop: '-50%',
   },
   flatList: {
     flex: 4,
