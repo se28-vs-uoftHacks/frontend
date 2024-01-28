@@ -14,10 +14,9 @@ import flappyBgImage from '../assets/account.jpg';
 import { useAuth } from '../hooks/AuthContext';
 import axios from 'axios';
 
-
 const AccountScreen = ({ navigation }) => {
   const { user } = useAuth();
-  
+
   const [selectedSprite, setSelectedSprite] = useState(null);
   //change this to be the user's when they fetch
   const [selectedSpriteNum, setSelectedSpriteNum] = useState(1);
@@ -67,7 +66,7 @@ const AccountScreen = ({ navigation }) => {
 
   //sends the sprite to the backend
   const sendSavedSprite = async () => {
-    console.log(selectedSpriteNum)
+    console.log(selectedSpriteNum);
     try {
       const response = await axios.put(
         'http://192.168.2.83:8080/dashboard/profileIcon',
@@ -85,10 +84,10 @@ const AccountScreen = ({ navigation }) => {
         console.log(response.data);
         navigation.navigate('Dashboard', { isIconVisible: true });
       }
-    }catch (error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
   selectedSprite: {
     width: 170,
     height: 120,
-    marginTop: '-50%',
+    marginTop: '-45%',
   },
   flatList: {
     flex: 4,
@@ -189,11 +188,13 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
   },
   enterButton: {
+    justifyContent: 'center',
     backgroundColor: '#0CA41C',
     padding: 5,
     borderRadius: 20,
     alignItems: 'center',
     width: '70%',
+    height: '130%', // adjust here
     textAlign: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -211,16 +212,18 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontFamily: 'PressStart2P_400Regular',
-    fontSize: 16, 
-    color: 'white', 
+    fontSize: 16,
+    color: 'white',
   },
   saveButton: {
+    justifyContent: 'center',
     backgroundColor: '#0CA41C',
     padding: 5,
     borderRadius: 15,
     marginTop: '8%',
     alignItems: 'center',
     width: '40%',
+    height: '60%', // adjust here
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

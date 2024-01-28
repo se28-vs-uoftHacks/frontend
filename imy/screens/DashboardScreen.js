@@ -1,22 +1,27 @@
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   ImageBackground,
-  TextInput,
-  Button,
+  Image,
+  Animated,
+  Modal,
+  Text,
+  TouchableOpacity,
 } from 'react-native';
-import getBirdFileName from './BirdMap';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import downPipe from '../assets/shorter_down_pipe.png';
 import upPipe from '../assets/short_up_pipe.png';
-import { Image, Animated } from 'react-native';
+import ground from '../assets/ground.jpg';
+import getBirdFileName from './BirdMap';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
-import ground from '../assets/ground.jpg';
-import React, { useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import {
+  useFonts,
+  PressStart2P_400Regular,
+} from '@expo-google-fonts/press-start-2p';
 
 // make birds shake lmao
 const shakeAnimation = new Animated.Value(-250);
@@ -59,22 +64,30 @@ const shakeStyle = {
   transform: [{ translateY: shakeAnimation }],
 };
 
-const BirdRow = ({ birdImages, showCrown, showPoop, isIconVisible }) => {
+const BirdRow = ({
+  birdImages,
+  showCrown,
+  showPoop,
+  isIconVisible,
+  onBirdPress,
+}) => {
   return (
     <View style={styles.flappyRow}>
       {birdImages.map((bird, index) => (
-        <View key={index}>
-          <Image
-            source={getBirdFileName(bird.profileIcon)}
-            style={styles.flappyBird}
-          />
-          {isIconVisible && showCrown && index === 0 && (
-            <Image source={crown} style={styles.crownIcon} />
-          )}
-          {isIconVisible && showPoop && index === birdImages.length - 1 && (
-            <Image source={poopIcon} style={styles.poopIcon} />
-          )}
-        </View>
+        <TouchableOpacity key={index} onPress={() => onBirdPress(bird)}>
+          <View>
+            <Image
+              source={getBirdFileName(bird.profileIcon)}
+              style={styles.flappyBird}
+            />
+            {isIconVisible && showCrown && index === 0 && (
+              <Image source={crown} style={styles.crownIcon} />
+            )}
+            {isIconVisible && showPoop && index === birdImages.length - 1 && (
+              <Image source={poopIcon} style={styles.poopIcon} />
+            )}
+          </View>
+        </TouchableOpacity>
       ))}
     </View>
   );
@@ -83,6 +96,8 @@ const BirdRow = ({ birdImages, showCrown, showPoop, isIconVisible }) => {
 const DashboardScreen = () => {
   const [birdList, setBirdList] = useState([]);
   const [isIconVisible, setIsIconVisible] = useState(false);
+  const [lightboxVisible, setLightboxVisible] = useState(false);
+  const [selectedBird, setSelectedBird] = useState(null);
 
   // birdList is given in ascending order based on score
   const birdImagesRow3 = birdList.slice(0, 3);
@@ -117,8 +132,16 @@ const DashboardScreen = () => {
     };
 
     fetchData(); // Call the function to make the request
-
   }, [isIconVisible]);
+
+  const handleBirdPress = (bird) => {
+    setSelectedBird(bird);
+    setLightboxVisible(true);
+  };
+
+  const closeModal = () => {
+    setLightboxVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -134,6 +157,7 @@ const DashboardScreen = () => {
                 showCrown={false}
                 showPoop={showPoopRow1}
                 isIconVisible={isIconVisible}
+                onBirdPress={handleBirdPress}
               />
             </Animated.View>
             <View style={styles.pipe2Container}>
@@ -150,6 +174,7 @@ const DashboardScreen = () => {
                 showCrown={false}
                 showPoop={showPoopRow2}
                 isIconVisible={isIconVisible}
+                onBirdPress={handleBirdPress}
               />
             </Animated.View>
             <View style={styles.pipe4Container}>
@@ -166,6 +191,7 @@ const DashboardScreen = () => {
                 showCrown={true}
                 showPoop={showPoopRow3}
                 isIconVisible={isIconVisible}
+                onBirdPress={handleBirdPress}
               />
             </Animated.View>
             <View style={styles.pipe6Container}>
@@ -178,6 +204,37 @@ const DashboardScreen = () => {
           <Image source={ground} style={styles.ground_image} />
         </View>
       </ImageBackground>
+
+      <Modal
+        transparent={true}
+        visible={lightboxVisible}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.lightboxContainer}>
+          <TouchableOpacity
+            style={styles.closeLightboxButton}
+            onPress={closeModal}
+          >
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+
+          {selectedBird && (
+            <View style={styles.lightboxContent}>
+              <Image
+                source={getBirdFileName(selectedBird.profileIcon)}
+                style={styles.lightboxBirdImage}
+              />
+              <Text style={styles.lightboxUsername}>
+                {selectedBird.username}
+              </Text>
+              <Text style={styles.lightboxScore}>
+                Score: {selectedBird.score}
+              </Text>
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -276,7 +333,6 @@ const styles = StyleSheet.create({
     width: 56.6,
     height: 40,
     margin: 20,
-    borderRadius: 10, // Make it a circle
     resizeMode: 'stretch',
     position: 'relative',
   },
@@ -315,6 +371,49 @@ const styles = StyleSheet.create({
   },
   ground_image: {
     resizeMode: 'cover',
+  },
+  lightboxContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 60,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+  },
+  closeLightboxButton: {
+    position: 'absolute',
+    bottom: 270,
+    padding: 10,
+    backgroundColor: '#0CA41C', // Blue background color
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontFamily: 'PressStart2P_400Regular',
+    color: '#fff', // White text color
+
+    fontSize: 16,
+  },
+  lightboxContent: {
+    alignItems: 'center',
+  },
+  lightboxBirdImage: {
+    width: 226.4,
+    height: 160,
+    marginBottom: 10,
+  },
+  lightboxUsername: {
+    marginTop: 10,
+    fontSize: 30,
+    fontFamily: 'PressStart2P_400Regular',
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 5,
+  },
+  lightboxScore: {
+    marginTop: 10,
+    fontSize: 16,
+    fontFamily: 'PressStart2P_400Regular',
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 
