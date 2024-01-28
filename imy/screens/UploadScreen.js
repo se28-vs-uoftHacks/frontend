@@ -19,7 +19,7 @@ import {
   TextInput,
   Button,
   Image,
-  FlatList
+  FlatList,
 } from 'react-native';
 
 const images = Array(16).fill(placeHolderImage);
@@ -31,14 +31,14 @@ const UploadScreen = () => {
 
   //random prompt + time generator
   const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-  
+
   //function to generate a random time
   const getRandomPastDate = () => {
     const currentDate = new Date();
     const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
     const pastDate = new Date(currentDate);
     pastDate.setDate(currentDate.getDate() - randomDaysAgo);
-  
+
     return pastDate;
   };
 
@@ -57,7 +57,8 @@ const UploadScreen = () => {
 
   //this allows user to upload image
   const ImagePickerFunction = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!');
@@ -73,32 +74,32 @@ const UploadScreen = () => {
 
     if (!result.cancelled) {
       setSelectImage(result.uri);
-      console.log("res", result)
+      console.log('res', result);
       uploadImage(result.assets[0]);
     }
   };
 
   const uploadImage = async (selectImage) => {
-
-    console.log(selectImage)
+    console.log(selectImage);
 
     const formData = new FormData();
-    formData.append('image',{
+    formData.append('image', {
       //endpoints that we send
       uri: selectImage.uri,
       type: selectImage.type,
       name: selectImage.fileName,
-    })
+    });
 
-    console.log(formData)
+    console.log(formData);
     try {
-      const uploadResponse = await axios.post( //we are using axios to post data to backend
+      const uploadResponse = await axios.post(
+        //we are using axios to post data to backend
         'http://backend-production-a339.up.railway.app/images/upload',
         formData,
-        {  
+        {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'x-access-token': user,//we use user as the token key
+            'x-access-token': user, //we use user as the token key
           },
         }
       );
@@ -124,8 +125,7 @@ const UploadScreen = () => {
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.promptContainer}>
-          <Text style={styles.prompt}>
-          {'Capture a moment from '}</Text>
+          <Text style={styles.prompt}>{'Capture a moment from '}</Text>
           <Text style={styles.highlight}>{randomPastDate.toDateString()}</Text>
           <Text style={styles.prompt}> {randomPrompt}</Text>
         </View>
@@ -141,7 +141,7 @@ const UploadScreen = () => {
             keyExtractor={(item, index) => index.toString()}
             numColumns={2}
           />
-      </View>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.uploadButton}
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 15,
     padding: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   container: {
     flex: 1,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '15%'
+    marginTop: '15%',
   },
   inputContainer: {
     flex: 2,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '7%',
+    marginBottom: '7.5%',
   },
   uploadButton: {
     backgroundColor: '#0CA41C',
