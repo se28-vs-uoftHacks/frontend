@@ -6,6 +6,7 @@ import UploadScreen from './screens/UploadScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import AccountScreen from './screens/AccountScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -17,6 +18,9 @@ import { AuthContextProvider } from './hooks/AuthContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+SplashScreen.preventAutoHideAsync()
+setTimeout(SplashScreen.hideAsync, 5000)
 
 const BottomTabNavigator = () => {
   return (
