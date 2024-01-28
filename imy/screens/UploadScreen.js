@@ -1,4 +1,5 @@
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
+import placeHolderImage from '../assets/placeholder.png';
 import { useState, useEffect } from 'react';
 import {
   useFonts,
@@ -12,7 +13,11 @@ import {
   ImageBackground,
   TextInput,
   Button,
+  FlatList,
+  Image,
 } from 'react-native';
+
+const images = Array(16).fill(placeHolderImage);
 
 const UploadScreen = () => {
   let [fontsLoaded] = useFonts({
@@ -45,6 +50,18 @@ const UploadScreen = () => {
           <Text style={styles.prompt}>{prompt2}</Text>
         </View>
 
+        <View style={styles.flatListContainer}>
+          <FlatList
+            data={images}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                <Image source={item} style={styles.image} />
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={2}
+          />
+      </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
             <Text style={styles.buttonText}>Upload</Text>
@@ -75,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '-30%',
+    marginTop: '10%'
   },
   inputContainer: {
     flex: 2,
@@ -106,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '30%',
+    marginBottom: '7%',
   },
   uploadButton: {
     backgroundColor: '#0CA41C',
@@ -128,6 +145,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'PressStart2P_400Regular',
     fontSize: 20,
+  },
+  image: {
+    width: '100%', // Adjust the width as needed
+    height: 150, // Adjust the height as needed
+    borderRadius: 20, // Adjust the border radius as needed
+    borderColor: '#F1FF8F', // Set the border color
+    borderWidth: 10, // Set the border width
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '2.5%', // Adjust the padding as needed
+  },
+  flatListContainer: {
+    flex: 4,
   },
 });
 
