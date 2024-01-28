@@ -14,6 +14,8 @@ import bird6 from '../birds/bird_6.png';
 import bird7 from '../birds/bird_7.png';
 import bird8 from '../birds/bird_8.png';
 import bird9 from '../birds/bird_9.png';
+import Lightbox from 'react-native-lightbox';
+
 import { Ionicons } from '@expo/vector-icons';
 import {
   useFonts,
@@ -29,6 +31,7 @@ import {
   Button,
   Image,
   FlatList,
+  LogBox
 } from 'react-native';
 
 //random prompt + time generator
@@ -48,9 +51,11 @@ const getRandomPastDate = () => {
 const randomPastDate = getRandomPastDate();
 
 const UploadScreen = () => {
-  const images = Array(16).fill(placeHolderImage); // temporary — we can link to db to determine #
-  const [isHeartRed, setHeartRed] = useState(false); // for liked
-  const [likedImages, setLikedImages] = useState(Array(images.length).fill(false));
+  const [likedImages, setLikedImages] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imageCount, setImageCount] = useState(0);
+  const [alreadyUploaded, setAlreadyUploaded] = useState(false);
+  
 
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
@@ -59,9 +64,10 @@ const UploadScreen = () => {
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
 
-
   // get the images to display
   useEffect(() => {
+    LogBox.ignoreLogs(['Animated']); // stupid annoying errors go byebye
+
     const fetchData = async() => {
       try {
         const response = await axios.get('http://192.168.2.83:8080/images',
@@ -70,14 +76,23 @@ const UploadScreen = () => {
             'x-access-token': user, // we use user as the token key
           },
         });
-        console.log(response.data)
+
+        console.log(response.data.images._doc)
+        response.data.images.forEach(image => {
+          console.log(image._doc.image);
+        });
+
+        setImageCount(response.data.images.length);
+        setLikedImages(Array(response.data.length).fill(false));
+        setImages(response.data.images.map(image => image._doc.image));
       } catch (error){
         console.error('Error fetching data from API', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [alreadyUploaded]);
+
 
   // const promptEngineer = () => {
   //   setPrompt('Jan 2021');
@@ -88,6 +103,13 @@ const UploadScreen = () => {
   
   //this allows user to upload image
   const ImagePickerFunction = async () => {
+
+    if (alreadyUploaded) {
+      console.log('You have already uploaded an image.');
+      alert('You have already uploaded an image today. Come back tomorrow!');
+      return;
+    }
+
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -128,7 +150,7 @@ const UploadScreen = () => {
     console.log(formData)
     try {
       const uploadResponse = await axios.post( //we are using axios to post data to backend
-        'http://backend-production-a339.up.railway.app/images/upload',
+        'http://192.168.2.83:8080/images/upload',
         formData,
         {
           headers: {
@@ -141,6 +163,8 @@ const UploadScreen = () => {
       if (uploadResponse.status === 200) {
         console.log('Image uploaded successfully!');
         // Handle success
+
+        setAlreadyUploaded(true);
       } else {
         console.error('Image upload failed!');
         // Handle error scenarios
@@ -170,7 +194,16 @@ const UploadScreen = () => {
             data={images}
             renderItem={({ item, index }) => (
               <View style={styles.imageContainer}>
-                <Image source={item} style={styles.image} />
+                <TouchableOpacity activeOpacity={1}>
+                  <Lightbox renderContent={() => (
+                    <View style={styles.lightboxImageContainer}>
+                        <Image source={{ uri: item }} style={styles.lightboxImage} />
+                    </View>
+                  )}>
+                        <Image source={{ uri: item }} style={styles.image} />
+                  </Lightbox>
+                  </TouchableOpacity>
+      
                 <TouchableOpacity activeOpacity={1} onPress={() => {
                   const newLikedImages = [...likedImages];
                   newLikedImages[index] = !newLikedImages[index];
@@ -180,9 +213,9 @@ const UploadScreen = () => {
                     name={likedImages[index] ? "heart" : "heart-outline"}
                     size={30}
                     color={likedImages[index] ? 'red' : 'black'}
-                    style={{ position: 'absolute', top: -130, right: -70 }}
+                    style={{ position: 'absolute', top: -130, right: -65 }}
                   />
-                  <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'white' : 'black', fontSize: 8 }}>
+                  <Text style={{ position: 'absolute', top: -119, right: -54, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'white' : 'black', fontSize: 8 }}>
                     1
                   </Text>
                 </TouchableOpacity>
@@ -292,7 +325,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   image: {
-    width: '100%',
+    width: 170,
     height: 150,
     borderRadius: 20,
     borderColor: '#F1FF8F',
@@ -313,6 +346,18 @@ const styles = StyleSheet.create({
     bottom: 6,
     width: 37.7,
     height: 26.7,
+  },
+  lightboxImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lightboxImage: {
+    width: '100%', 
+    height: '100%', 
+    resizeMode: 'contain', 
+    borderRadius: 20,
+    borderColor: '#F1FF8F',
+    borderWidth: 10,
   }
 });
 
