@@ -5,7 +5,16 @@ import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../hooks/AuthContext';
 import { PROMPTS } from '../constants/prompts';
-
+import bird1 from '../birds/bird_1.png';
+import bird2 from '../birds/bird_2.png';
+import bird3 from '../birds/bird_3.png';
+import bird4 from '../birds/bird_4.png';
+import bird5 from '../birds/bird_5.png';
+import bird6 from '../birds/bird_6.png';
+import bird7 from '../birds/bird_7.png';
+import bird8 from '../birds/bird_8.png';
+import bird9 from '../birds/bird_9.png';
+import { Ionicons } from '@expo/vector-icons';
 import {
   useFonts,
   PressStart2P_400Regular,
@@ -19,12 +28,31 @@ import {
   TextInput,
   Button,
   Image,
-  FlatList
+  FlatList,
 } from 'react-native';
 
-const images = Array(16).fill(placeHolderImage);
+//random prompt + time generator
+const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+
+//function to generate a random time
+const getRandomPastDate = () => {
+  const currentDate = new Date();
+  const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
+  const pastDate = new Date(currentDate);
+  pastDate.setDate(currentDate.getDate() - randomDaysAgo);
+
+  return pastDate;
+};
+
+const randomPastDate = getRandomPastDate();
 
 const UploadScreen = () => {
+  const images = Array(16).fill(placeHolderImage); // temporary — we can link to db to determine #
+  const [isHeartRed, setHeartRed] = useState(false); // for liked
+  const [likedImages, setLikedImages] = useState(
+    Array(images.length).fill(false)
+  );
+
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
   });
@@ -41,16 +69,65 @@ const UploadScreen = () => {
   
     return pastDate;
   };
+//random prompt + time generator
+const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
 
-  const randomPastDate = getRandomPastDate();
+//function to generate a random time
+const getRandomPastDate = () => {
+  const currentDate = new Date();
+  const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
+  const pastDate = new Date(currentDate);
+  pastDate.setDate(currentDate.getDate() - randomDaysAgo);
+
+  return pastDate;
+};
+
+const randomPastDate = getRandomPastDate();
 
   // right now, we don't have dynamic text/prompts, but we will use something like this once we do
+const UploadScreen = () => {
+  const images = Array(16).fill(placeHolderImage); // temporary — we can link to db to determine #
+  const [isHeartRed, setHeartRed] = useState(false); // for liked
+  const [likedImages, setLikedImages] = useState(
+    Array(images.length).fill(false)
+  );
+
+  let [fontsLoaded] = useFonts({
+    PressStart2P_400Regular,
+  });
+
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
 
+  // get the images to display
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.2.83:8080/images', {
+          headers: {
+            'x-access-token': user, // we use user as the token key
+          },
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching data from API', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // const promptEngineer = () => {
+  //   setPrompt('Jan 2021');
+  //   setPrompt2('Pet Photos');
+  // };
+
+  // display all images
+
   //this allows user to upload image
   const ImagePickerFunction = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!');
@@ -66,32 +143,32 @@ const UploadScreen = () => {
 
     if (!result.cancelled) {
       setSelectImage(result.uri);
-      console.log("res", result)
+      console.log('res', result);
       uploadImage(result.assets[0]);
     }
   };
 
   const uploadImage = async (selectImage) => {
-
-    console.log(selectImage)
+    console.log(selectImage);
 
     const formData = new FormData();
-    formData.append('image',{
+    formData.append('image', {
       //endpoints that we send
       uri: selectImage.uri,
       type: selectImage.type,
       name: selectImage.fileName,
-    })
+    });
 
-    console.log(formData)
+    console.log(formData);
     try {
-      const uploadResponse = await axios.post( //we are using axios to post data to backend
+      const uploadResponse = await axios.post(
+        //we are using axios to post data to backend
         'http://backend-production-a339.up.railway.app/images/upload',
         formData,
-        {  
+        {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'x-access-token': user,//we use user as the token key
+            'x-access-token': user, //we use user as the token key
           },
         }
       );
@@ -117,8 +194,8 @@ const UploadScreen = () => {
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.promptContainer}>
-          <Text style={styles.prompt}>
-          {'Capture a moment from '}</Text>
+          <Text style={styles.prompt}>{'Capture a moment from '}</Text>
+          <Text style={styles.prompt}>{'Capture a moment from '}</Text>
           <Text style={styles.highlight}>{randomPastDate.toDateString()}</Text>
           <Text style={styles.prompt}> {randomPrompt}</Text>
         </View>
@@ -126,15 +203,43 @@ const UploadScreen = () => {
         <View style={styles.flatListContainer}>
           <FlatList
             data={images}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={styles.imageContainer}>
                 <Image source={item} style={styles.image} />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    const newLikedImages = [...likedImages];
+                    newLikedImages[index] = !newLikedImages[index];
+                    setLikedImages(newLikedImages);
+                  }}
+                >
+                  <Ionicons
+                    name={likedImages[index] ? 'heart' : 'heart-outline'}
+                    size={30}
+                    color={likedImages[index] ? 'red' : 'black'}
+                    style={{ position: 'absolute', top: -130, right: -70 }}
+                  />
+                  <Text
+                    style={{
+                      position: 'absolute',
+                      top: -119,
+                      right: -59,
+                      fontFamily: 'PressStart2P_400Regular',
+                      color: likedImages[index] ? 'white' : 'black',
+                      fontSize: 8,
+                    }}
+                  >
+                    1
+                  </Text>
+                </TouchableOpacity>
+                <Image source={bird1} style={styles.icon} />
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
             numColumns={2}
           />
-      </View>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.uploadButton}
@@ -164,7 +269,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 15,
     padding: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   container: {
     flex: 1,
@@ -179,7 +284,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '15%'
+    marginTop: '15%',
   },
   inputContainer: {
     flex: 2,
@@ -210,7 +315,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '7%',
+    marginBottom: '7.5%',
   },
   uploadButton: {
     backgroundColor: '#0CA41C',
@@ -234,20 +339,27 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   image: {
-    width: '100%', // Adjust the width as needed
-    height: 150, // Adjust the height as needed
-    borderRadius: 20, // Adjust the border radius as needed
-    borderColor: '#F1FF8F', // Set the border color
-    borderWidth: 10, // Set the border width
+    width: '100%',
+    height: 150,
+    borderRadius: 20,
+    borderColor: '#F1FF8F',
+    borderWidth: 10,
   },
   imageContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '2.5%', // Adjust the padding as needed
+    padding: '2.5%',
   },
   flatListContainer: {
     flex: 4,
+  },
+  icon: {
+    position: 'absolute',
+    left: 8,
+    bottom: 6,
+    width: 37.7,
+    height: 26.7,
   },
 });
 

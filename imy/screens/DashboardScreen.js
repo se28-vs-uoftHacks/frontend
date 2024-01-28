@@ -1,5 +1,5 @@
+import axios from 'axios';
 import {
-  TouchableOpacity,
   StyleSheet,
   Text,
   View,
@@ -7,32 +7,31 @@ import {
   TextInput,
   Button,
 } from 'react-native';
+import getBirdFileName from './BirdMap';
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import downPipe from '../assets/shorter_down_pipe.png';
 import upPipe from '../assets/short_up_pipe.png';
 import { Image, Animated } from 'react-native';
-import bird1 from '../birds/bird_1.png';
-import bird2 from '../birds/bird_2.png';
-import bird3 from '../birds/bird_3.png';
-import bird4 from '../birds/bird_4.png';
-import bird5 from '../birds/bird_5.png';
-import bird6 from '../birds/bird_6.png';
-import bird7 from '../birds/bird_7.png';
-import bird8 from '../birds/bird_8.png';
-import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
 import ground from '../assets/ground.jpg';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 // make birds shake lmao
 const shakeAnimation = new Animated.Value(-250);
 
-const startFullTravel = () => {
+const startFullTravel = (setIsIconVisible) => {
   Animated.sequence([
     Animated.timing(shakeAnimation, {
-      toValue: 300,
-      duration: 5000, // Adjust the duration for the full travel
+      toValue: -250, // Adjust the value to move birds above the screen
+      duration: 0, // No duration, immediate move
+      useNativeDriver: true,
+    }),
+    Animated.delay(500),
+    Animated.timing(shakeAnimation, {
+      toValue: 280,
+      duration: 2000, // Adjust the duration for the full travel
       useNativeDriver: true,
     }),
     Animated.timing(shakeAnimation, {
@@ -41,6 +40,8 @@ const startFullTravel = () => {
       useNativeDriver: true,
     }),
   ]).start(() => {
+    // Start the second animation after the delay
+    setIsIconVisible(true); // Set isVisible to true here
     // Start the second animation after the first one completes
     startHalfTravel();
   });
@@ -49,7 +50,7 @@ const startFullTravel = () => {
 const startHalfTravel = () => {
   Animated.timing(shakeAnimation, {
     toValue: 0,
-    duration: 3000, // Adjust the duration for half travel
+    duration: 1200, // Adjust the duration for half travel
     useNativeDriver: true,
   }).start();
 };
@@ -58,16 +59,19 @@ const shakeStyle = {
   transform: [{ translateY: shakeAnimation }],
 };
 
-const BirdRow = ({ birdImages, showCrown, showPoop }) => {
+const BirdRow = ({ birdImages, showCrown, showPoop, isIconVisible }) => {
   return (
     <View style={styles.flappyRow}>
-      {birdImages.map((birdImage, index) => (
+      {birdImages.map((bird, index) => (
         <View key={index}>
-          <Image source={birdImage} style={styles.flappyBird} />
-          {showCrown && index === 0 && (
+          <Image
+            source={getBirdFileName(bird.profileIcon)}
+            style={styles.flappyBird}
+          />
+          {isIconVisible && showCrown && index === 0 && (
             <Image source={crown} style={styles.crownIcon} />
           )}
-          {showPoop && index === birdImages.length - 1 && (
+          {isIconVisible && showPoop && index === birdImages.length - 1 && (
             <Image source={poopIcon} style={styles.poopIcon} />
           )}
         </View>
@@ -77,12 +81,42 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
 };
 
 const DashboardScreen = () => {
-  const birdImagesRow1 = [bird1, bird2, bird3];
-  const birdImagesRow2 = [bird4, bird5, bird6];
-  const birdImagesRow3 = [bird7, bird8, bird9];
+  const [birdList, setBirdList] = useState([]);
+  const [isIconVisible, setIsIconVisible] = useState(false);
+
+  // birdList is given in ascending order based on score
+  const birdImagesRow3 = birdList.slice(0, 3);
+  const birdImagesRow2 = birdList.slice(3, 6);
+  const birdImagesRow1 = birdList.slice(6, 9);
+
+  // Set showPoop based on the conditions
+  const showPoopRow3 = birdList.length > 1 && birdImagesRow2.length === 0;
+  const showPoopRow2 = birdImagesRow3.length > 0 && birdImagesRow1.length === 0;
+  const showPoopRow1 = birdList.length > 1 && birdImagesRow2.length > 0;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsIconVisible(false);
+      // Trigger shake animation when the screen is focused
+      startFullTravel(setIsIconVisible);
+      // Cleanup function when the screen is unfocused
+      return () => {
+        // You can perform cleanup here if needed
+      };
+    }, [])
+  );
 
   useEffect(() => {
-    startFullTravel();
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.2.83:8080/dashboard');
+        setBirdList(response.data.users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData(); // Call the function to make the request
   }, []);
 
   return (
@@ -97,7 +131,8 @@ const DashboardScreen = () => {
               <BirdRow
                 birdImages={birdImagesRow1}
                 showCrown={false}
-                showPoop={true}
+                showPoop={showPoopRow1}
+                isIconVisible={isIconVisible}
               />
             </Animated.View>
             <View style={styles.pipe2Container}>
@@ -112,7 +147,8 @@ const DashboardScreen = () => {
               <BirdRow
                 birdImages={birdImagesRow2}
                 showCrown={false}
-                showPoop={false}
+                showPoop={showPoopRow2}
+                isIconVisible={isIconVisible}
               />
             </Animated.View>
             <View style={styles.pipe4Container}>
@@ -127,7 +163,8 @@ const DashboardScreen = () => {
               <BirdRow
                 birdImages={birdImagesRow3}
                 showCrown={true}
-                showPoop={false}
+                showPoop={showPoopRow3}
+                isIconVisible={isIconVisible}
               />
             </Animated.View>
             <View style={styles.pipe6Container}>
@@ -270,7 +307,7 @@ const styles = StyleSheet.create({
   },
   groundContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -5,
     left: 0,
     right: 0,
     zIndex: 20,
