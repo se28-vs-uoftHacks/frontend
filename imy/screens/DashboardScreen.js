@@ -22,26 +22,41 @@ import bird8 from '../birds/bird_8.png';
 import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
+import ground from '../assets/ground.jpg';
 import { useEffect } from 'react';
 
-
 // make birds shake lmao
-const shakeAnimation = new Animated.Value(0);
+const shakeAnimation = new Animated.Value(-250);
 
-const startShake = () => {
+const startFullTravel = () => {
   Animated.sequence([
-    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: -10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: 10, duration: 100, useNativeDriver: true }),
-    Animated.timing(shakeAnimation, { toValue: 0, duration: 100, useNativeDriver: true })
-  ]).start(() => startShake()); // Restart the animation when it's finished
-}
-// Use the animated value in your styles
-const shakeStyle = {
-  transform: [{ translateX: shakeAnimation }]
+    Animated.timing(shakeAnimation, {
+      toValue: 300,
+      duration: 5000, // Adjust the duration for the full travel
+      useNativeDriver: true,
+    }),
+    Animated.timing(shakeAnimation, {
+      toValue: -250, // Adjust the value to move birds above the screen
+      duration: 0, // No duration, immediate move
+      useNativeDriver: true,
+    }),
+  ]).start(() => {
+    // Start the second animation after the first one completes
+    startHalfTravel();
+  });
 };
 
-
+const startHalfTravel = () => {
+  Animated.timing(shakeAnimation, {
+    toValue: 0,
+    duration: 3000, // Adjust the duration for half travel
+    useNativeDriver: true,
+  }).start();
+};
+// Use the animated value in your styles
+const shakeStyle = {
+  transform: [{ translateY: shakeAnimation }],
+};
 
 const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   return (
@@ -52,7 +67,7 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
           {showCrown && index === 0 && (
             <Image source={crown} style={styles.crownIcon} />
           )}
-          {showPoop && index === 2 && (
+          {showPoop && index === birdImages.length - 1 && (
             <Image source={poopIcon} style={styles.poopIcon} />
           )}
         </View>
@@ -61,16 +76,15 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   );
 };
 
-
 const DashboardScreen = () => {
   const birdImagesRow1 = [bird1, bird2, bird3];
   const birdImagesRow2 = [bird4, bird5, bird6];
   const birdImagesRow3 = [bird7, bird8, bird9];
 
   useEffect(() => {
-    startShake();
+    startFullTravel();
   }, []);
-  
+
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
@@ -121,6 +135,10 @@ const DashboardScreen = () => {
             </View>
           </View>
         </View>
+
+        <View style={styles.groundContainer}>
+          <Image source={ground} style={styles.ground_image} />
+        </View>
       </ImageBackground>
     </View>
   );
@@ -153,6 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: 96,
   },
   pipe1Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'red',
@@ -161,6 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe2Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -169,6 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe3Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'red',
@@ -177,6 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe4Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -185,6 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe5Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     // backgroundColor: 'red',
@@ -193,6 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pipe6Container: {
+    zIndex: 10,
     marginLeft: 10,
     marginRight: 10,
     //backgroundColor: 'pink',
@@ -202,6 +226,7 @@ const styles = StyleSheet.create({
   },
 
   flappyRow: {
+    zIndex: 2,
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: '100%', // Ensure it takes the full width
@@ -209,6 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flappyBird: {
+    zIndex: 2,
     width: 56.6,
     height: 40,
     margin: 20,
@@ -231,6 +257,7 @@ const styles = StyleSheet.create({
     width: 32.75,
     height: 25.6,
     transform: [{ rotate: '-30deg' }], // Adjust the degree of rotation
+    zIndex: 3,
   },
   poopIcon: {
     position: 'absolute',
@@ -239,6 +266,17 @@ const styles = StyleSheet.create({
     width: 30.8,
     height: 32,
     transform: [{ rotate: '-22deg' }], // Adjust the degree of rotation
+    zIndex: 3,
+  },
+  groundContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+  },
+  ground_image: {
+    resizeMode: 'cover',
   },
 });
 
