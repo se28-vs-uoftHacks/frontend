@@ -35,7 +35,7 @@ const UploadScreen = () => {
   //function to generate a random time
   const getRandomPastDate = () => {
     const currentDate = new Date();
-    const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
+    const randomDaysAgo = Math.floor(Math.random() * 3650); // Random number of days ago (up to a year)
     const pastDate = new Date(currentDate);
     pastDate.setDate(currentDate.getDate() - randomDaysAgo);
   
@@ -45,15 +45,8 @@ const UploadScreen = () => {
   const randomPastDate = getRandomPastDate();
 
   // right now, we don't have dynamic text/prompts, but we will use something like this once we do
-  const [prompt, setPrompt] = useState('');
-  const [prompt2, setPrompt2] = useState(''); // we'll likely have two prompts e.g., jan 2021 and pet photos
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
-
-  // const promptEngineer = () => {
-  //   setPrompt('Jan 2021');
-  //   setPrompt2('Pet Photos');
-  // };
 
   //this allows user to upload image
   const ImagePickerFunction = async () => {
