@@ -26,23 +26,33 @@ import ground from '../assets/ground.jpg';
 import { useEffect } from 'react';
 
 // make birds shake lmao
-const shakeAnimation = new Animated.Value(-300);
+const shakeAnimation = new Animated.Value(-250);
 
-const startShake = () => {
+const startFullTravel = () => {
   Animated.sequence([
     Animated.timing(shakeAnimation, {
       toValue: 300,
-      duration: 4000,
+      duration: 5000, // Adjust the duration for the full travel
       useNativeDriver: true,
-    }), // Move down
+    }),
     Animated.timing(shakeAnimation, {
-      toValue: -300,
-      duration: 0,
+      toValue: -250, // Adjust the value to move birds above the screen
+      duration: 0, // No duration, immediate move
       useNativeDriver: true,
-    }), // Reset position
-  ]).start(() => startShake()); // Restart the animation when it's finished
+    }),
+  ]).start(() => {
+    // Start the second animation after the first one completes
+    startHalfTravel();
+  });
 };
 
+const startHalfTravel = () => {
+  Animated.timing(shakeAnimation, {
+    toValue: 0,
+    duration: 3000, // Adjust the duration for half travel
+    useNativeDriver: true,
+  }).start();
+};
 // Use the animated value in your styles
 const shakeStyle = {
   transform: [{ translateY: shakeAnimation }],
@@ -57,7 +67,7 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
           {showCrown && index === 0 && (
             <Image source={crown} style={styles.crownIcon} />
           )}
-          {showPoop && index === 2 && (
+          {showPoop && index === birdImages.length - 1 && (
             <Image source={poopIcon} style={styles.poopIcon} />
           )}
         </View>
@@ -72,7 +82,7 @@ const DashboardScreen = () => {
   const birdImagesRow3 = [bird7, bird8, bird9];
 
   useEffect(() => {
-    startShake();
+    startFullTravel();
   }, []);
 
   return (
@@ -247,6 +257,7 @@ const styles = StyleSheet.create({
     width: 32.75,
     height: 25.6,
     transform: [{ rotate: '-30deg' }], // Adjust the degree of rotation
+    zIndex: 3,
   },
   poopIcon: {
     position: 'absolute',
@@ -255,6 +266,7 @@ const styles = StyleSheet.create({
     width: 30.8,
     height: 32,
     transform: [{ rotate: '-22deg' }], // Adjust the degree of rotation
+    zIndex: 3,
   },
   groundContainer: {
     position: 'absolute',
