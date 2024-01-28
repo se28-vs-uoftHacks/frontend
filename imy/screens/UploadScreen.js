@@ -75,16 +75,14 @@ const UploadScreen = () => {
 
         // console.log(response.data.images[0].profileIcon);
 
-        response.data.images.forEach(image => {
+        response.data.images.forEach((image) => {
           // console.log(image._doc);
         });
 
-        
-
         setImageCount(response.data.images.length);
-        setImages(response.data.images.map(image => image._doc.image));
+        setImages(response.data.images.map((image) => image._doc.image));
 
-        let imagesArray = response.data.images.map(image => image._doc.image);
+        let imagesArray = response.data.images.map((image) => image._doc.image);
 
         // If the number of images is odd, add an empty element at the end
         if (imagesArray.length % 2 !== 0) {
@@ -94,13 +92,12 @@ const UploadScreen = () => {
         setImages(imagesArray);
 
         setLikedImages(Array(response.data.length).fill(false));
-        setIsOwner(response.data.images.map(image => image.isOwner));
-        setImageId(response.data.images.map(image => image._doc._id));
-        setLikes(response.data.images.map(image => image._doc.likes));
-        setbirdId(response.data.images.map(image => image.imagesArray));
+        setIsOwner(response.data.images.map((image) => image.isOwner));
+        setImageId(response.data.images.map((image) => image._doc._id));
+        setLikes(response.data.images.map((image) => image._doc.likes));
+        setbirdId(response.data.images.map((image) => image.imagesArray));
         // setbirdId()
-      
-      } catch (error){
+      } catch (error) {
         console.error('Error fetching data from API', error);
       }
     };
@@ -195,19 +192,26 @@ const UploadScreen = () => {
             renderItem={({ item, index }) => (
               <View style={styles.imageContainer}>
                 <TouchableOpacity activeOpacity={1}>
-                    {item ? (
-                      <Lightbox renderContent={() => (
+                  {item ? (
+                    <Lightbox
+                      renderContent={() => (
                         <View style={styles.lightboxImageContainer}>
-                          <Image source={{ uri: item }} style={styles.lightboxImage} />
+                          <Image
+                            source={{ uri: item }}
+                            style={styles.lightboxImage}
+                          />
                         </View>
-                      )}>
-                        <Image source={{ uri: item }} style={styles.image} />
-                      </Lightbox>
-                    ) : (
-                      <Image source={{ uri: item }} style={[styles.image, { opacity: 0 }]} />
-                    )}
-                  </TouchableOpacity>
-                    
+                      )}
+                    >
+                      <Image source={{ uri: item }} style={styles.image} />
+                    </Lightbox>
+                  ) : (
+                    <Image
+                      source={{ uri: item }}
+                      style={[styles.image, { opacity: 0 }]}
+                    />
+                  )}
+                </TouchableOpacity>
 
                 {!isOwner[index] && (
                   <TouchableOpacity
@@ -233,48 +237,67 @@ const UploadScreen = () => {
                             throw new Error('Response not OK');
                           }
 
-                        // update likes count
-                        const newLikes = [...likes];
-                        newLikes[index]++;
-                        setLikes(newLikes);
-
-                      } catch (error) {
-                        console.error('Error liking image', error);
-                      }
-                    } else {
-                      try {
-                        const response = await axios.put(`http://192.168.2.83:8080/images/unlike/${imageId[index]}`, {}, {
-                          headers: {
-                            'x-access-token': user, // we use user as the token key
-                          },
-                        });
-                  
-                        if (response.status !== 200) {
-                          throw new Error('Response not OK');
+                          // update likes count
+                          const newLikes = [...likes];
+                          newLikes[index]++;
+                          setLikes(newLikes);
+                        } catch (error) {
+                          console.error('Error liking image', error);
                         }
-                  
-                        // update likes count
-                        const newLikes = [...likes];
-                        newLikes[index]--;
-                        setLikes(newLikes);
-                  
-                      } catch (error) {
-                        console.error('Error unliking image', error);
+                      } else {
+                        try {
+                          const response = await axios.put(
+                            `http://backend-production-a339.up.railway.app/images/unlike/${imageId[index]}`,
+                            {},
+                            {
+                              headers: {
+                                'x-access-token': user, // we use user as the token key
+                              },
+                            }
+                          );
+
+                          if (response.status !== 200) {
+                            throw new Error('Response not OK');
+                          }
+
+                          // update likes count
+                          const newLikes = [...likes];
+                          newLikes[index]--;
+                          setLikes(newLikes);
+                        } catch (error) {
+                          console.error('Error unliking image', error);
+                        }
                       }
-                    }
-                  }} disabled={!item}>
+                    }}
+                    disabled={!item}
+                  >
                     <Ionicons
                       name={likedImages[index] ? 'heart' : 'heart-outline'}
                       size={30}
                       color={likedImages[index] ? 'red' : 'white'}
-                      style={[{ position: 'absolute', top: -130, right: -70 }, !item && { opacity: 0 }]} // these values are illegal this is terrible code
+                      style={[
+                        { position: 'absolute', top: -130, right: -70 },
+                        !item && { opacity: 0 },
+                      ]} // these values are illegal this is terrible code
                     />
-                   <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'black' : 'white', fontSize: 8 }}>
-                    {likes[index] > 0 ? likes[index] : null}
-                  </Text>
+                    <Text
+                      style={{
+                        position: 'absolute',
+                        top: -119,
+                        right: -59,
+                        fontFamily: 'PressStart2P_400Regular',
+                        color: likedImages[index] ? 'black' : 'white',
+                        fontSize: 8,
+                      }}
+                    >
+                      {likes[index] > 0 ? likes[index] : null}
+                    </Text>
                   </TouchableOpacity>
                 )}
-               <Image source={getBirdFileName(Math.floor(Math.random() * 15))} style={[styles.icon, !item && { opacity: 0 }]} />
+                <Image
+                  source={getBirdFileName(Math.floor(Math.random() * 15))}
+                  style={[styles.icon, !item && { opacity: 0 }]}
+                />
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
