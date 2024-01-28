@@ -19,8 +19,7 @@ import {
   TextInput,
   Button,
   Image,
-  FlatList,
-  Image,
+  FlatList
 } from 'react-native';
 
 const images = Array(16).fill(placeHolderImage);
@@ -51,10 +50,10 @@ const UploadScreen = () => {
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
 
-  const promptEngineer = () => {
-    setPrompt('Jan 2021');
-    setPrompt2('Pet Photos');
-  };
+  // const promptEngineer = () => {
+  //   setPrompt('Jan 2021');
+  //   setPrompt2('Pet Photos');
+  // };
 
   //this allows user to upload image
   const ImagePickerFunction = async () => {
@@ -117,16 +116,18 @@ const UploadScreen = () => {
     }
   };
 
-  useEffect(() => {
-    promptEngineer();
-  }, []);
+  // useEffect(() => {
+  //   promptEngineer();
+  // }, []);
 
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.promptContainer}>
-        <Text>{randomPrompt}</Text>
-        <Text>{`Capture a moment from ${randomPastDate.toDateString()}`}</Text>
+          <Text style={styles.prompt}>
+          {'Capture a moment from '}</Text>
+          <Text style={styles.highlight}>{randomPastDate.toDateString()}</Text>
+          <Text style={styles.prompt}> {randomPrompt}</Text>
         </View>
 
         <View style={styles.flatListContainer}>
@@ -161,8 +162,16 @@ const styles = StyleSheet.create({
   prompt: {
     fontFamily: 'PressStart2P_400Regular',
     color: 'white',
-    fontSize: 30,
+    fontSize: 15,
     padding: 5,
+    textAlign: 'center',
+  },
+  highlight: {
+    fontFamily: 'PressStart2P_400Regular',
+    color: 'black',
+    fontSize: 15,
+    padding: 5,
+    textAlign: 'center'
   },
   container: {
     flex: 1,
@@ -177,7 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '10%'
+    marginTop: '15%'
   },
   inputContainer: {
     flex: 2,

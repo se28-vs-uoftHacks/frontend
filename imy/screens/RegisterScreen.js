@@ -44,11 +44,11 @@ const RegisterScreen = ({ navigation }) => {
         );
 
         if (response.status === 200) {
+            signIn(response.data.user);
           navigation.navigate('TabNavigator', { screen: 'Dashboard' });
         }
 
         console.log(response.data);
-        signIn(response.data.user);
       } catch (error) {
         console.error(error);
       }

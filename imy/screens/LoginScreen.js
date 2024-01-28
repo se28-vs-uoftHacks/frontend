@@ -38,16 +38,15 @@ const LoginScreen = ( { navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('backend-production-a339.up.railway.app/users/signup', {
+        const response = await axios.post('http://backend-production-a339.up.railway.app/users/login', {
           username: username,
           password: password
         });
 
         if (response.status === 200) {
+          signIn(response.data.user)
           navigation.navigate('TabNavigator', { screen: 'Dashboard' })
         }
-
-        signIn(response.data.user)
 
       } catch (error) {
         console.error(error);
