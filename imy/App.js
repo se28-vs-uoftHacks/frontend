@@ -20,49 +20,47 @@ const Stack = createStackNavigator();
 
 const BottomTabNavigator = () => {
   return (
-
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen
-          name="Account"
-          component={AccountScreen}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? 'person' : 'person-circle-outline'}
-                size={size}
-                color={'#059905'}
-
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Dashboard"
-          component={DashboardScreen}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? 'calendar' : 'calendar-outline'}
-                size={size}
-                color={'#059905'}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Upload"
-          component={UploadScreen}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <Ionicons
-                name={focused ? 'home' : 'home-outline'}
-                size={size}
-                color={'#059905'}
-              />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-circle-outline'}
+              size={size}
+              color={'#059905'}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? 'calendar' : 'calendar-outline'}
+              size={size}
+              color={'#059905'}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Upload"
+        component={UploadScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={size}
+              color={'#059905'}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
@@ -72,32 +70,31 @@ export default function App() {
     Prompt_400Regular,
     Poppins_400Regular,
   });
-  
+
   if (!fontsLoaded) {
     return;
-  } 
+  }
 
   return (
     <AuthContextProvider>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login"
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: 'tomato',
-          tabBarInactiveTintColor: 'gray',
-        }}
-      >
-
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: 'tomato',
+            tabBarInactiveTintColor: 'gray',
+          }}
+        >
           <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
           />
-        <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
-           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      </Stack.Navigator>
-    
-    </NavigationContainer>
+          <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </AuthContextProvider>
   );
 }

@@ -12,12 +12,12 @@ import flappyBgImage from '../assets/flappy_bg.jpg';
 import axios from 'axios';
 import { useAuth } from '../hooks/AuthContext';
 
-const LoginScreen = ( { navigation }) => {
-  
+const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [forgotPasswordText, setForgotPasswordText] = useState('Forgot Password?')
-  const { signIn } = useAuth()
+  const [forgotPasswordText, setForgotPasswordText] =
+    useState('Forgot Password?');
+  const { signIn } = useAuth();
 
   const handleLogin = () => {
     // whatever we need to do on the backend funky bs
@@ -25,16 +25,18 @@ const LoginScreen = ( { navigation }) => {
 
     const loginUser = async (username, password) => {
       try {
-        const response = await axios.post('http://backend-production-a339.up.railway.app/users/login', {
-          username: username,
-          password: password
-        });
+        const response = await axios.post(
+          'http://backend-production-a339.up.railway.app/users/login',
+          {
+            username: username,
+            password: password,
+          }
+        );
 
         if (response.status === 200) {
-          signIn(response.data.user)
-          navigation.navigate('TabNavigator', { screen: 'Dashboard' })
+          signIn(response.data.user);
+          navigation.navigate('TabNavigator', { screen: 'Dashboard' });
         }
-
       } catch (error) {
         console.error(error);
       }
@@ -46,13 +48,11 @@ const LoginScreen = ( { navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    if (forgotPasswordText === "Forgot Password?"){
+    if (forgotPasswordText === 'Forgot Password?') {
       setForgotPasswordText("sucks lmao don't forget next time");
     } else {
-      setForgotPasswordText("Forgot Password?");
+      setForgotPasswordText('Forgot Password?');
     }
-
-  
   };
 
   return (
@@ -62,7 +62,9 @@ const LoginScreen = ( { navigation }) => {
           <Text style={styles.welcome}>Welcome!</Text>
         </View>
         <View style={styles.inputContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('RegisterScreen')}
+          >
             <Text style={styles.signup}>No account yet? Make one here!</Text>
           </TouchableOpacity>
           <TextInput
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textDecorationLine: 'underline',
     fontFamily: 'Poppins_400Regular',
-  }
+  },
 });
 
 export default LoginScreen;

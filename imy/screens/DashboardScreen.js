@@ -124,7 +124,9 @@ const DashboardScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.2.83:8080/dashboard');
+        const response = await axios.get(
+          'http://backend-production-a339.up.railway.app/dashboard'
+        );
         setBirdList(response.data.users);
       } catch (error) {
         console.log(error);
