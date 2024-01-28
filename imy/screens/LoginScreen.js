@@ -12,21 +12,8 @@ import flappyBgImage from '../assets/flappy_bg.jpg';
 import axios from 'axios';
 import { useAuth } from '../hooks/AuthContext';
 
-// import {
-//   useFonts,
-//   PressStart2P_400Regular,
-// } from '@expo-google-fonts/press-start-2p';
-// import { Prompt_400Regular } from '@expo-google-fonts/prompt';
-// import { Poppins_400Regular } from '@expo-google-fonts/poppins';
-
-
-
 const LoginScreen = ( { navigation }) => {
-  // let [fontsLoaded] = useFonts({
-  //   PressStart2P_400Regular,
-  //   Prompt_400Regular,
-  // });
-
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [forgotPasswordText, setForgotPasswordText] = useState('Forgot Password?')

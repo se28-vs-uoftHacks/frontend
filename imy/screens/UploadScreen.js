@@ -34,21 +34,6 @@ import {
   LogBox
 } from 'react-native';
 
-//random prompt + time generator
-const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-
-//function to generate a random time
-const getRandomPastDate = () => {
-  const currentDate = new Date();
-  const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
-  const pastDate = new Date(currentDate);
-  pastDate.setDate(currentDate.getDate() - randomDaysAgo);
-
-  return pastDate;
-
-};
-
-const randomPastDate = getRandomPastDate();
 
 const UploadScreen = () => {
   const [likedImages, setLikedImages] = useState([]);
@@ -61,6 +46,21 @@ const UploadScreen = () => {
     PressStart2P_400Regular,
   });
 
+  //random prompt + time generator
+  const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+  
+  //function to generate a random time
+  const getRandomPastDate = () => {
+    const currentDate = new Date();
+    const randomDaysAgo = Math.floor(Math.random() * 3650); // Random number of days ago (up to a year)
+    const pastDate = new Date(currentDate);
+    pastDate.setDate(currentDate.getDate() - randomDaysAgo);
+  
+    return pastDate;
+  };
+
+const randomPastDate = getRandomPastDate();
+
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
 
@@ -70,8 +70,7 @@ const UploadScreen = () => {
 
     const fetchData = async() => {
       try {
-        const response = await axios.get('http://192.168.2.83:8080/images',
-        {
+        const response = await axios.get('http://192.168.2.83:8080/images', {
           headers: {
             'x-access-token': user, // we use user as the token key
           },
@@ -94,13 +93,9 @@ const UploadScreen = () => {
   }, [alreadyUploaded]);
 
 
-  // const promptEngineer = () => {
-  //   setPrompt('Jan 2021');
-  //   setPrompt2('Pet Photos');
-  // };
 
   // display all images
-  
+
   //this allows user to upload image
   const ImagePickerFunction = async () => {
 
@@ -126,18 +121,13 @@ const UploadScreen = () => {
 
     if (!result.cancelled) {
       setSelectImage(result.uri);
-      console.log("res", result)
+      console.log('res', result);
       uploadImage(result.assets[0]);
     }
   };
 
-
-
-
-
   const uploadImage = async (selectImage) => {
-
-    console.log(selectImage)
+    console.log(selectImage);
 
     const formData = new FormData();
     formData.append('image', {
@@ -145,9 +135,9 @@ const UploadScreen = () => {
       uri: selectImage.uri,
       type: selectImage.type,
       name: selectImage.fileName,
-    })
+    });
 
-    console.log(formData)
+    console.log(formData);
     try {
       const uploadResponse = await axios.post( //we are using axios to post data to backend
         'http://192.168.2.83:8080/images/upload',
@@ -155,7 +145,7 @@ const UploadScreen = () => {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'x-access-token': user,//we use user as the token key
+            'x-access-token': user, //we use user as the token key
           },
         }
       );
@@ -175,16 +165,12 @@ const UploadScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   promptEngineer();
-  // }, []);
 
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.promptContainer}>
-          <Text style={styles.prompt}>
-            {'Capture a moment from '}</Text>
+          <Text style={styles.prompt}>{'Capture a moment from '}</Text>
           <Text style={styles.highlight}>{randomPastDate.toDateString()}</Text>
           <Text style={styles.prompt}> {randomPrompt}</Text>
         </View>
@@ -210,12 +196,12 @@ const UploadScreen = () => {
                   setLikedImages(newLikedImages);
                 }}>
                   <Ionicons
-                    name={likedImages[index] ? "heart" : "heart-outline"}
+                    name={likedImages[index] ? 'heart' : 'heart-outline'}
                     size={30}
                     color={likedImages[index] ? 'red' : 'black'}
-                    style={{ position: 'absolute', top: -130, right: -65 }}
+                    style={{ position: 'absolute', top: -130, right: -70 }}
                   />
-                  <Text style={{ position: 'absolute', top: -119, right: -54, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'white' : 'black', fontSize: 8 }}>
+                  <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'white' : 'black', fontSize: 8 }}>
                     1
                   </Text>
                 </TouchableOpacity>
@@ -255,7 +241,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 15,
     padding: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   container: {
     flex: 1,
@@ -270,7 +256,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '15%'
+    marginTop: '15%',
   },
   inputContainer: {
     flex: 2,
@@ -301,7 +287,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '7%',
+    marginBottom: '7.5%',
   },
   uploadButton: {
     backgroundColor: '#0CA41C',
