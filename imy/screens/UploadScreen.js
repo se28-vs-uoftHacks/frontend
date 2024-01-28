@@ -40,14 +40,14 @@ const UploadScreen = () => {
   const [images, setImages] = useState([]);
   const [imageCount, setImageCount] = useState(0);
   const [alreadyUploaded, setAlreadyUploaded] = useState(false);
-  
+  const [isOwner, setIsOwner] = useState([]);
+  const [randomPrompt] = useState(() => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
+  const [imageId, setImageId] = useState([]);
+  const [likes, setLikes] = useState([]);
 
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
   });
-
-  //random prompt + time generator
-  const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
   
   //function to generate a random time
   const getRandomPastDate = () => {
@@ -59,14 +59,14 @@ const UploadScreen = () => {
     return pastDate;
   };
 
-const randomPastDate = getRandomPastDate();
+  const [randomPastDate] = useState(getRandomPastDate);
 
   const [selectImage, setSelectImage] = useState('');
   const { user } = useAuth();
 
   // get the images to display
   useEffect(() => {
-    LogBox.ignoreLogs(['Animated']); // stupid annoying errors go byebye
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']); // stupid annoying errors go byebye
 
     const fetchData = async() => {
       try {
@@ -76,14 +76,19 @@ const randomPastDate = getRandomPastDate();
           },
         });
 
-        console.log(response.data.images._doc)
+        console.log(response.data.images[0]._doc.likes);
+
         response.data.images.forEach(image => {
-          console.log(image._doc.image);
+          // console.log(image._doc.likes);
         });
 
         setImageCount(response.data.images.length);
         setLikedImages(Array(response.data.length).fill(false));
         setImages(response.data.images.map(image => image._doc.image));
+        setIsOwner(response.data.images.map(image => image.isOwner));
+        setImageId(response.data.images.map(image => image._doc._id));
+        setLikes(response.data.images.map(image => image._doc.likes));
+      
       } catch (error){
         console.error('Error fetching data from API', error);
       }
@@ -189,22 +194,67 @@ const randomPastDate = getRandomPastDate();
                         <Image source={{ uri: item }} style={styles.image} />
                   </Lightbox>
                   </TouchableOpacity>
-      
-                <TouchableOpacity activeOpacity={1} onPress={() => {
-                  const newLikedImages = [...likedImages];
-                  newLikedImages[index] = !newLikedImages[index];
-                  setLikedImages(newLikedImages);
-                }}>
-                  <Ionicons
-                    name={likedImages[index] ? 'heart' : 'heart-outline'}
-                    size={30}
-                    color={likedImages[index] ? 'red' : 'black'}
-                    style={{ position: 'absolute', top: -130, right: -70 }}
-                  />
-                  <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'white' : 'black', fontSize: 8 }}>
-                    1
-                  </Text>
-                </TouchableOpacity>
+                    
+
+                {!isOwner[index] && (
+                  <TouchableOpacity activeOpacity={1} onPress={async () => {
+                    const newLikedImages = [...likedImages];
+                    newLikedImages[index] = !newLikedImages[index];
+                    setLikedImages(newLikedImages);
+                  
+                    if (newLikedImages[index]) {
+                      try {
+                        const response = await axios.put(`http://192.168.2.83:8080/images/like/${imageId[index]}`, {}, {
+                          headers: {
+                            'x-access-token': user, // we use user as the token key
+                          },
+                        });
+                  
+                        if (response.status !== 200) {
+                          throw new Error('Response not OK');
+                        }
+
+                        // update likes count
+                        const newLikes = [...likes];
+                        newLikes[index]++;
+                        setLikes(newLikes);
+
+                      } catch (error) {
+                        console.error('Error liking image', error);
+                      }
+                    } else {
+                      try {
+                        const response = await axios.put(`http://192.168.2.83:8080/images/unlike/${imageId[index]}`, {}, {
+                          headers: {
+                            'x-access-token': user, // we use user as the token key
+                          },
+                        });
+                  
+                        if (response.status !== 200) {
+                          throw new Error('Response not OK');
+                        }
+                  
+                        // update likes count
+                        const newLikes = [...likes];
+                        newLikes[index]--;
+                        setLikes(newLikes);
+                  
+                      } catch (error) {
+                        console.error('Error unliking image', error);
+                      }
+                    }
+                  }}>
+                    <Ionicons
+                      name={likedImages[index] ? 'heart' : 'heart-outline'}
+                      size={30}
+                      color={likedImages[index] ? 'red' : 'white'}
+                      style={{ position: 'absolute', top: -130, right: -70 }}
+                    />
+                    <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'black' : 'white', fontSize: 8 }}>
+                      {likes[index] > 0 ? likes[index] : null}
+                    </Text>
+                  </TouchableOpacity>
+                )}
                 <Image source={bird1} style={styles.icon} />
               </View>
             )}
