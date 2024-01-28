@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../hooks/AuthContext';
+import { PROMPTS } from '../constants/prompts';
 
 import {
   useFonts,
@@ -23,6 +24,21 @@ const UploadScreen = () => {
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
   });
+
+  //random prompt + time generator
+  const randomPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+  
+  //function to generate a random time
+  const getRandomPastDate = () => {
+    const currentDate = new Date();
+    const randomDaysAgo = Math.floor(Math.random() * 365); // Random number of days ago (up to a year)
+    const pastDate = new Date(currentDate);
+    pastDate.setDate(currentDate.getDate() - randomDaysAgo);
+  
+    return pastDate;
+  };
+
+  const randomPastDate = getRandomPastDate();
 
   // right now, we don't have dynamic text/prompts, but we will use something like this once we do
   const [prompt, setPrompt] = useState('');
@@ -104,8 +120,8 @@ const UploadScreen = () => {
     <View style={styles.container}>
       <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
         <View style={styles.promptContainer}>
-          <Text style={styles.prompt}>{prompt}</Text>
-          <Text style={styles.prompt}>{prompt2}</Text>
+        <Text>{randomPrompt}</Text>
+        <Text>{`Capture a moment from ${randomPastDate.toDateString()}`}</Text>
         </View>
 
         <View style={styles.buttonContainer}>
