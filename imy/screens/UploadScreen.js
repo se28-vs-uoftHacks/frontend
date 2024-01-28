@@ -5,15 +5,7 @@ import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../hooks/AuthContext';
 import { PROMPTS } from '../constants/prompts';
-import bird1 from '../birds/bird_1.png';
-import bird2 from '../birds/bird_2.png';
-import bird3 from '../birds/bird_3.png';
-import bird4 from '../birds/bird_4.png';
-import bird5 from '../birds/bird_5.png';
-import bird6 from '../birds/bird_6.png';
-import bird7 from '../birds/bird_7.png';
-import bird8 from '../birds/bird_8.png';
-import bird9 from '../birds/bird_9.png';
+import getBirdFileName from './BirdMap';
 import Lightbox from 'react-native-lightbox';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -44,6 +36,7 @@ const UploadScreen = () => {
   const [randomPrompt] = useState(() => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
   const [imageId, setImageId] = useState([]);
   const [likes, setLikes] = useState([]);
+  const [birdId, setbirdId] = useState([]);
 
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
@@ -66,7 +59,7 @@ const UploadScreen = () => {
 
   // get the images to display
   useEffect(() => {
-    LogBox.ignoreLogs(['Animated: `useNativeDriver`']); // stupid annoying errors go byebye
+    LogBox.ignoreLogs(['Animated']); // stupid annoying errors go byebye
 
     const fetchData = async() => {
       try {
@@ -76,18 +69,32 @@ const UploadScreen = () => {
           },
         });
 
-        console.log(response.data.images[0]._doc.likes);
+        // console.log(response.data.images[0].profileIcon);
 
         response.data.images.forEach(image => {
-          // console.log(image._doc.likes);
+          // console.log(image._doc);
         });
 
+        
+
         setImageCount(response.data.images.length);
-        setLikedImages(Array(response.data.length).fill(false));
         setImages(response.data.images.map(image => image._doc.image));
+
+        let imagesArray = response.data.images.map(image => image._doc.image);
+
+        // If the number of images is odd, add an empty element at the end
+        if (imagesArray.length % 2 !== 0) {
+          imagesArray.push(null);
+        }
+
+        setImages(imagesArray);
+
+        setLikedImages(Array(response.data.length).fill(false));
         setIsOwner(response.data.images.map(image => image.isOwner));
         setImageId(response.data.images.map(image => image._doc._id));
         setLikes(response.data.images.map(image => image._doc.likes));
+        setbirdId(response.data.images.map(image => image.imagesArray));
+        // setbirdId()
       
       } catch (error){
         console.error('Error fetching data from API', error);
@@ -186,13 +193,17 @@ const UploadScreen = () => {
             renderItem={({ item, index }) => (
               <View style={styles.imageContainer}>
                 <TouchableOpacity activeOpacity={1}>
-                  <Lightbox renderContent={() => (
-                    <View style={styles.lightboxImageContainer}>
-                        <Image source={{ uri: item }} style={styles.lightboxImage} />
-                    </View>
-                  )}>
+                    {item ? (
+                      <Lightbox renderContent={() => (
+                        <View style={styles.lightboxImageContainer}>
+                          <Image source={{ uri: item }} style={styles.lightboxImage} />
+                        </View>
+                      )}>
                         <Image source={{ uri: item }} style={styles.image} />
-                  </Lightbox>
+                      </Lightbox>
+                    ) : (
+                      <Image source={{ uri: item }} style={[styles.image, { opacity: 0 }]} />
+                    )}
                   </TouchableOpacity>
                     
 
@@ -243,19 +254,19 @@ const UploadScreen = () => {
                         console.error('Error unliking image', error);
                       }
                     }
-                  }}>
+                  }} disabled={!item}>
                     <Ionicons
                       name={likedImages[index] ? 'heart' : 'heart-outline'}
                       size={30}
                       color={likedImages[index] ? 'red' : 'white'}
-                      style={{ position: 'absolute', top: -130, right: -70 }}
+                      style={[{ position: 'absolute', top: -130, right: -70 }, !item && { opacity: 0 }]} // these values are illegal this is terrible code
                     />
-                    <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'black' : 'white', fontSize: 8 }}>
-                      {likes[index] > 0 ? likes[index] : null}
-                    </Text>
+                   <Text style={{ position: 'absolute', top: -119, right: -59, fontFamily: 'PressStart2P_400Regular', color: likedImages[index] ? 'black' : 'white', fontSize: 8 }}>
+                    {likes[index] > 0 ? likes[index] : null}
+                  </Text>
                   </TouchableOpacity>
                 )}
-                <Image source={bird1} style={styles.icon} />
+               <Image source={getBirdFileName(Math.floor(Math.random() * 15))} style={[styles.icon, !item && { opacity: 0 }]} />
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}

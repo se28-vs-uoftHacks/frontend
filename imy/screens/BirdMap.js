@@ -1,5 +1,6 @@
 // BirdMap.js
 
+import bird0 from '../birds/bird_0.png';
 import bird1 from '../birds/bird_1.png';
 import bird2 from '../birds/bird_2.png';
 import bird3 from '../birds/bird_3.png';
@@ -18,6 +19,7 @@ import bird15 from '../birds/bird_15.png';
 import bird16 from '../birds/bird_16.png';
 
 const birdMap = {
+  0: bird0,
   1: bird1,
   2: bird2,
   3: bird3,
