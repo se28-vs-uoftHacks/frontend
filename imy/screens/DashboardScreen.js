@@ -1,5 +1,5 @@
+import axios from 'axios';
 import {
-  TouchableOpacity,
   StyleSheet,
   Text,
   View,
@@ -7,23 +7,15 @@ import {
   TextInput,
   Button,
 } from 'react-native';
+import getBirdFileName from './BirdMap';
 import flappyBgImage from '../assets/flappy_bg_cropped.jpg';
 import downPipe from '../assets/shorter_down_pipe.png';
 import upPipe from '../assets/short_up_pipe.png';
 import { Image, Animated } from 'react-native';
-import bird1 from '../birds/bird_1.png';
-import bird2 from '../birds/bird_2.png';
-import bird3 from '../birds/bird_3.png';
-import bird4 from '../birds/bird_4.png';
-import bird5 from '../birds/bird_5.png';
-import bird6 from '../birds/bird_6.png';
-import bird7 from '../birds/bird_7.png';
-import bird8 from '../birds/bird_8.png';
-import bird9 from '../birds/bird_9.png';
 import crown from '../assets/crown.png';
 import poopIcon from '../assets/poop.png';
 import ground from '../assets/ground.jpg';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // make birds shake lmao
 const shakeAnimation = new Animated.Value(-250);
@@ -31,8 +23,8 @@ const shakeAnimation = new Animated.Value(-250);
 const startFullTravel = () => {
   Animated.sequence([
     Animated.timing(shakeAnimation, {
-      toValue: 300,
-      duration: 5000, // Adjust the duration for the full travel
+      toValue: 280,
+      duration: 2500, // Adjust the duration for the full travel
       useNativeDriver: true,
     }),
     Animated.timing(shakeAnimation, {
@@ -49,7 +41,7 @@ const startFullTravel = () => {
 const startHalfTravel = () => {
   Animated.timing(shakeAnimation, {
     toValue: 0,
-    duration: 3000, // Adjust the duration for half travel
+    duration: 1250, // Adjust the duration for half travel
     useNativeDriver: true,
   }).start();
 };
@@ -61,9 +53,12 @@ const shakeStyle = {
 const BirdRow = ({ birdImages, showCrown, showPoop }) => {
   return (
     <View style={styles.flappyRow}>
-      {birdImages.map((birdImage, index) => (
+      {birdImages.map((bird, index) => (
         <View key={index}>
-          <Image source={birdImage} style={styles.flappyBird} />
+          <Image
+            source={getBirdFileName(bird.profileIcon)}
+            style={styles.flappyBird}
+          />
           {showCrown && index === 0 && (
             <Image source={crown} style={styles.crownIcon} />
           )}
@@ -77,12 +72,28 @@ const BirdRow = ({ birdImages, showCrown, showPoop }) => {
 };
 
 const DashboardScreen = () => {
-  const birdImagesRow1 = [bird1, bird2, bird3];
-  const birdImagesRow2 = [bird4, bird5, bird6];
-  const birdImagesRow3 = [bird7, bird8, bird9];
+  const [birdList, setBirdList] = useState([]);
+
+  // birdList is given in ascending order based on score
+  const birdImagesRow3 = birdList.slice(0, 3);
+  const birdImagesRow2 = birdList.slice(3, 6);
+  const birdImagesRow1 = birdList.slice(6, 9);
 
   useEffect(() => {
     startFullTravel();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.2.83:8080/dashboard');
+        setBirdList(response.data.users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData(); // Call the function to make the request
   }, []);
 
   return (
