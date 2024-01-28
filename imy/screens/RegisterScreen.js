@@ -39,65 +39,64 @@ const RegisterScreen = ({ navigation }) => {
           'http://backend-production-a339.up.railway.app/users/signup',
           {
             username: username,
-            password: password
-          });
-  
-          if (response.status === 200) {
-            navigation.navigate('TabNavigator', { screen: 'Dashboard' })
+            password: password,
           }
-  
-          console.log(response.data);
-          signIn(response.data.user);
-  
-        } catch (error) {
-          console.error(error);
-        }
-      };
-  
-      RegisterUser(username, password);
-  
-      // navigation.navigate('Dashboard');
-    };
-  
-  
+        );
 
-  
-    return (
-      <View style={styles.container}>
-        <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
-          <View style={styles.welcomeContainer}>
-            <Text style={styles.welcome}>Welcome!</Text>
-          </View>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.signup}>Already have an account? Login here!</Text>
-            </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              onChangeText={setUsername}
-              value={username}
-              placeholder="Username"
-              placeholderTextColor="white" // Add this line
-            />
-            <TextInput
-              style={styles.input}
-              onChangeText={setPassword}
-              value={password}
-              placeholder="Password"
-              placeholderTextColor="white" // Add this line
-              secureTextEntry
-            />
-            <Text style={styles.forgotPassword}> </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.enterButton} onPress={handleRegister}>
-              <Text style={styles.buttonText}>Register</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buffer}></View>
-        </ImageBackground>
-      </View>
-    );
+        if (response.status === 200) {
+          navigation.navigate('TabNavigator', { screen: 'Dashboard' });
+        }
+
+        console.log(response.data);
+        signIn(response.data.user);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    RegisterUser(username, password);
+
+    // navigation.navigate('Dashboard');
+  };
+
+  return (
+    <View style={styles.container}>
+      <ImageBackground style={styles.backgroundImage} source={flappyBgImage}>
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcome}>Register!</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.signup}>
+              Already have an account? Login here!
+            </Text>
+          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            onChangeText={setUsername}
+            value={username}
+            placeholder="Username"
+            placeholderTextColor="white" // Add this line
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setPassword}
+            value={password}
+            placeholder="Password"
+            placeholderTextColor="white" // Add this line
+            secureTextEntry
+          />
+          <Text style={styles.forgotPassword}> </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.enterButton} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buffer}></View>
+      </ImageBackground>
+    </View>
+  );
 };
 
 RegisterScreen.options = {
