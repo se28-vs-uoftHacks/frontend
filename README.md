@@ -1,4 +1,5 @@
 ![Imy showcase (1)](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/229f35ac-de66-4b2d-badb-a66dabf87e0b)
+![Imy showcase](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/8c779f67-32bb-4905-b049-1aa295014df1)
 
 ## Inspiration 🎞️
 
