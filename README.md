@@ -34,6 +34,7 @@ We learned how to deploy a backend, make a native app, and merge conflicts (ther
 
 We love the idea behind imy and it's definitely a project that we'll continue working on post UoftHacks! There's lots of code refactoring and little features that we'd love to add, and we think the cute frontend design has a lot of promise. We're extremely excited for the future of imy, and we hope to make it even better soon.
 
+![Imy showcase (1)](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/229f35ac-de66-4b2d-badb-a66dabf87e0b)
 ![image](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/034c3a52-141b-45f5-90e4-f0aea0ea1e97)
 ![image](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/c5240464-0d4a-4ffa-8566-40c7ea2fc0ad)
 ![image](https://github.com/se28-vs-uoftHacks/frontend/assets/152770271/9af7d951-89be-49e0-a6bb-b1e073002515)
